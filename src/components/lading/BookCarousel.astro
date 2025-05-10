@@ -5,7 +5,7 @@ const books = [
     title: "PIZARNIK",
     author: "Edición Completa",
     cover: "/src/assets/img/landing/pizarn.png", // Corregido: eliminado /src/
-    url: "/libros/pizarnik"
+    url: "/libros/ListaLibros.astro"
   },
   {
     id: 2,
@@ -45,10 +45,10 @@ const books = [
 ];
 ---
 
-<div class="carousel-outer-container mx-auto max-w-4xl relative py-8">
+<div class="carousel-outer-container mx-auto max-w-4xl relative py-8 rounded-">
   <!-- Botones de navegación fuera del contenedor del carrusel -->
   <button
-    class="carousel-button prev absolute left-0 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-1000 z-20 transition-all duration-300 transform -translate-x-1/2"
+    class="carousel-button prev absolute left-0 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-1000 z-20 transition-all duration-300 transform -translate-x-1/2"
     aria-label="Libros anteriores"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -57,9 +57,9 @@ const books = [
   </button>
 
   <!-- Contenedor del carrusel con máscara para ocultar desbordamiento -->
-  <div class="carousel-container relative overflow-hidden py-4 px-12">
+  <div class="carousel-container relative overflow-hidden py-4 px-12 rounded-xl">
     <!-- Wrapper con ancho fijo para centrar las tarjetas visibles -->
-    <div class="carousel-wrapper flex gap-6 transition-transform duration-300 ease-in-out">
+    <div class="carousel-wrapper flex gap-6 transition-transform duration-300 ease-in-out rounded-sm ">
       {books.map((book) => (
         <a
           href={book.url}
@@ -88,7 +88,7 @@ const books = [
 
   <!-- Botón siguiente -->
   <button
-    class="carousel-button next absolute right-0 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 z-20 transition-all duration-300 transform translate-x-1/2"
+    class="carousel-button next absolute right-0 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 z-20 transition-all duration-300 transform translate-x-1/2"
     aria-label="Siguientes libros"
   >
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -286,11 +286,11 @@ const books = [
 
   .carousel-container::before {
     left: 0;
-    background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0));
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(255,255,255,0));
   }
 
   .carousel-container::after {
     right: 0;
-    background: linear-gradient(to left, rgba(255,255,255,0.8), rgba(255,255,255,0));
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.2), rgba(255,255,255,0));
   }
 </style>

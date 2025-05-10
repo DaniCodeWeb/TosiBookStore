@@ -2,53 +2,46 @@
 import BookCarousel from './BookCarousel.astro';
 ---
 
-<section class="bg-indigo-400 relative overflow-hidden min-h-[500px] flex items-center">
+<section class="bg-indigo-400 relative overflow-hidden min-h-[500px] md:min-h-[600px] flex items-center "flex-grow"
+       data-aos="zoom-in"
+       data-aos-duration="600"
+       data-aos-delay="300"">
+  <!-- Fondo con imagen -->
+  <div class="absolute inset-0 bg-[url('/src/assets/img/landing/fondoPrin.jpg')] bg-cover bg-center opacity-50"></div>
   <div class="absolute inset-0 bg-indigo-500/20"></div>
 
-
-  <!-- Nueva capa para la imagen de fondo -->
-  <div class="absolute inset-0 bg-[url('/src/assets/img/landing/fondoPrin.jpg')] bg-cover bg-center opacity-50"></div>
-
-
-  <!-- Estrellas decoracion-->
-  <div class="absolute top-21 right-10">
-    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15 0L18.5 11.5H30L20.5 18.5L24 30L15 23L6 30L9.5 18.5L0 11.5H11.5L15 0Z" fill="#FFD700"/>
+  <!-- Decoración de estrellas (responsive) -->
+  <div class="absolute top-10 md:top-21 right-5 md:right-10">
+    <svg class="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 30 30" fill="#FFD700">
+      <path d="M15 0L18.5 11.5H30L20.5 18.5L24 30L15 23L6 30L9.5 18.5L0 11.5H11.5L15 0Z"/>
     </svg>
   </div>
 
-  <div class="absolute bottom-20 left-20">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 0L12.3 7.7H20L13.8 12.3L16.1 20L10 15.4L3.9 20L6.2 12.3L0 7.7H7.7L10 0Z" fill="#FFD700"/>
-    </svg>
-  </div>
-
-  <div class="absolute top-10 right-40">
-    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7.5 0L9.2 5.8H15L10.4 9.2L12.1 15L7.5 11.6L2.9 15L4.6 9.2L0 5.8H5.8L7.5 0Z" fill="#FFD700"/>
-    </svg>
-  </div>
-
-  <!-- dibujos -->
-  <div class="absolute left-10 bottom-0 h-64 w-64">
-  </div>
-
-  <div class="container mx-auto px-4 py-16 relative z-10">
-    <div class="text-center mb-12">
-      <h1 class="text-white text-3xl md:text-4xl font-light italic mb-4">
-        Encuentra lo mejor en nuestra página con las <br>
+  <!-- Contenido principal -->
+  <div class="container mx-auto px-4 py-8 md:py-16 relative z-10">
+    <div class="text-center mb-8 md:mb-12">
+      <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-light italic mb-4">
+        Encuentra lo mejor en nuestra página con las <br class="hidden sm:block">
         <span class="font-medium">mejores novedades</span>
       </h1>
     </div>
 
-    <div class="max-w-4xl mx-auto">
+    <!-- Carrusel adaptado -->
+    <div class="max-w-full sm:max-w-2xl md:max-w-4xl mx-auto px-2 sm:px-0 rounded-xl">
       <BookCarousel />
     </div>
   </div>
 
-  <!-- decoracion -->
-  <div class="absolute bottom-1 right-5">
-    <svg width="150" height="100" viewBox="0 0 150 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Elementos decorativos (ocultos en mobile) -->
+  <div class="hidden md:block absolute bottom-20 left-20">
+    <svg class="w-5 h-5" viewBox="0 0 20 20" fill="#FFD700">
+      <path d="M10 0L12.3 7.7H20L13.8 12.3L16.1 20L10 15.4L3.9 20L6.2 12.3L0 7.7H7.7L10 0Z"/>
+    </svg>
+  </div>
+
+  <!-- Más decoración (solo desktop) -->
+  <div class="hidden lg:block absolute bottom-1 right-5">
+    <svg class="w-32 h-20" viewBox="0 0 150 100" fill="none">
       <path d="M140 10C140 10 100 20 80 40C60 60 50 90 50 90" stroke="#FFD700" stroke-width="2"/>
       <circle cx="140" cy="10" r="8" fill="#FFD700"/>
     </svg>

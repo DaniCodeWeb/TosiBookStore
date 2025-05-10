@@ -26,7 +26,8 @@ const { isLoggedIn = false } = Astro.props;
       <!-- Área de contenido principal -->
       <div class="col-span-1 md:col-span-3 flex flex-col overflow-hidden">
         <div class="flex-grow" data-aos="fade-in">
-          <Carrusel />
+          <Carrusel
+          />
         </div>
       </div>
     </div>
@@ -42,7 +43,7 @@ const { isLoggedIn = false } = Astro.props;
     </div>
 
     <!-- Sección Novedades - Cambiado a fade-in para evitar desplazamiento lateral -->
-    <div id="novedades" class="min-h-screen py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="100">
+    <div id="novedades" class="min-h-screen py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="170">
       <Novedades class="h-full" />
     </div>
 

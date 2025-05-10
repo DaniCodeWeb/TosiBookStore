@@ -3,9 +3,9 @@ import MainLayout from '../../layouts/lading/MainLayout.astro';
 
 // Datos de la categoría (rutas de imágenes corregidas)
 const category = {
-  name: "Cómics",
-  slug: "comics",
-  bgImage: "/assets/img/landing/Poesia.png", // Corregido: eliminado /src/
+  name: "Poesia",
+  slug: "poesia",
+  bgImage: "/src/assets/img/categorias/poesia/poesia2.webp", // Corregido: eliminado /src/
   description: "Descubre los mejores cómics de Marvel, DC y más"
 };
 
@@ -76,7 +76,7 @@ const books = [
   </div>
 
   <!-- Contenido principal -->
-  <main class="container mx-auto px-4 py-12">
+  <main  class="container mx-auto px-4 py-12">
     <!-- Buscador -->
     <div class="mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="150">
       <div class="relative">
@@ -94,13 +94,13 @@ const books = [
     </div>
 
     <!-- Filtros de categoría -->
-    <div class="mb-8 flex flex-wrap gap-3 justify-center" data-aos="fade-up" data-aos-delay="200">
+    <div class="mb-8 flex flex-wrap gap-3 justify-center" data-aos="fade-up" data-aos-delay="100">
       <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium">Todos</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">Marvel</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">DC Comics</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">Manga</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">Novela Gráfica</button>
+      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">Autor</button>
+      <button class="px-4 py-2 bg-gray-200 hover:bg-red-500 rounded-full text-sm font-medium">Nombre</button>
+      <button class="px-4 py-2 bg-gray-200 hover:bg-green-500 rounded-full text-sm font-medium">Editoral</button>
     </div>
+
 
     <!-- Grid de libros -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
