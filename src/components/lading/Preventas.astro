@@ -1,0 +1,203 @@
+---
+const preorderBooks = [
+  {
+    id: 1,
+    title: "Escuela de la naturaleza",
+    author: "Lexus",
+    cover: "/src/assets/img/landing/NATURALEZA.jpg",
+    releaseDate: "15 de junio, 2025",
+    price: "180 bs",
+    discount: "153 bs"
+  },
+  {
+    id: 2,
+    title: "Historia de la vida",
+    author: "Lexus",
+    cover: "/src/assets/img/landing/historiavida.jpg",
+    releaseDate: "30 de junio, 2025",
+    price: "180 bs",
+    discount: "153 bs"
+  },
+  {
+    id: 3,
+    title: "Historia para chicos",
+    author: "Lexus",
+    cover: "/src/assets/img/landing/infat.png",
+    releaseDate: "10 de julio, 2025",
+    price: "200 bs",
+    discount: "170 bs"
+  }
+];
+---
+
+<section>
+  <div class="pb-16 bg-gray-100 min-h-screen">
+    <!-- Hero section with title - removed top padding and margin -->
+    <div class="bg-gray-200 py-12 mb-8  relative overflow-hidden bg-cover bg-center"
+         style="background-image: url('/src/assets/img/landing/OFERTAS.jpg');">
+      <!-- Added overlay to ensure text is readable -->
+      <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <h1 class="text-4xl font-bold text-center mb-4 text-white">PREVENTAS</h1>
+        <p class="text-center text-white max-w-2xl mx-auto">
+          Reserva ahora los próximos lanzamientos y sé el primero en leerlos. Envío prioritario el día de publicación.
+        </p>
+      </div>
+    </div>
+
+
+    <!-- Main content -->
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Left sidebar with promotional text -->
+        <div class="lg:col-span-1">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">¡Reserva con anticipación!</h2>
+            <p class="text-gray-700 mb-6">
+              Asegura tu copia de los libros más esperados antes de su lanzamiento. Preventas con descuentos exclusivos y envío prioritario.
+            </p>
+            <p class="text-gray-700 mb-6">
+              Sé el primero en disfrutar de las novedades literarias más esperadas del año.
+            </p>
+            <a href="/todas-preventas" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors">
+              Todas las Preventas
+            </a>
+          </div>
+
+          <div class="mt-8 bg-yellow-50 p-6 rounded-lg shadow-md border border-yellow-200">
+            <h3 class="text-lg font-bold mb-3 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              ¿Cómo funcionan las preventas?
+            </h3>
+            <ul class="text-sm text-gray-700 space-y-2">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Reserva ahora y paga al precio de preventa (con descuento)</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Recibirás o se enviara tu libro el mismo día de su lanzamiento</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Envío prioritario para clientes de preventa</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Cancela tu reserva sin coste hasta 7 días antes del lanzamiento</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right content with book cards -->
+        <div class="lg:col-span-3">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {preorderBooks.map((book) => (
+              <div class="bg-white rounded-lg overflow-hidden shadow-md relative group">
+                <div class="absolute top-0 right-0 bg-red-600 text-white font-bold py-1 px-3 rounded-bl-lg z-10 transform rotate-0 transition-transform group-hover:rotate-3">
+                  PREVENTA
+                </div>
+
+                <div class="relative overflow-hidden">
+                  <img
+                    src={book.cover || "/placeholder.svg?height=400&width=300"}
+                    alt={book.title}
+                    class="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 mb-4 rounded-md transition-colors">
+                      Reservar ahora
+                    </button>
+                  </div>
+                </div>
+
+                <div class="p-4">
+                  <h3 class="font-bold text-lg mb-1">{book.title}</h3>
+                  <p class="text-gray-600 text-sm mb-2">{book.author}</p>
+
+                  <div class="flex items-center mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-sm text-gray-500">Lanzamiento: {book.releaseDate}</span>
+                  </div>
+
+                  <div class="flex items-center justify-between mt-3">
+                    <div>
+                      <span class="text-gray-500 line-through text-sm">{book.price}</span>
+                      <span class="text-blue-600 font-bold ml-2">{book.discount}</span>
+                    </div>
+                    <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">
+                      Ahorra 15%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Featured preorder -->
+          <div class="mt-10 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md overflow-hidden">
+            <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              <div class="md:col-span-2">
+                <span class="inline-block bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
+                  PREVENTA DESTACADA
+                </span>
+                <h3 class="text-2xl font-bold mb-3">Blackout</h3>
+                <p class="text-gray-600 mb-4">
+                  La esperada conclusión de la trilogía "Los Guardianes del Tiempo" de la aclamada autora Elena Fuentes. Una aventura épica que ha cautivado a millones de lectores en todo el mundo.
+                </p>
+                <div class="flex items-center mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span class="text-sm text-gray-500">Lanzamiento: 5 de agosto, 2025</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div>
+                    <span class="text-gray-500 line-through text-sm">200 bs</span>
+                    <span class="text-blue-600 font-bold text-xl ml-2">160 bs</span>
+                  </div>
+                  <button class="bg-yellow-400 hover:bg-red-400 text-black font-medium py-2 px-6 rounded-md transition-colors">
+                    Reservar con 20% descuento
+                  </button>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <img
+                  src="/src/assets/img/BLACK.png"
+                  alt="La Última Profecía"
+                  class="h-64 object-cover rounded-md shadow-lg transform -rotate-3 hover:rotate-0 transition-transform"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- More books button -->
+          <div class="text-center mt-12">
+            <a
+              href="/preventas/ListaPreventas"
+              class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              Ver todas las preventas
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,70 @@
+---
+// Datos de la categoría (rutas de imágenes corregidas)
+// /pages/libros/ListaLibros.astro
+import BookListLayout from '../../layouts/BookListLayout.astro';
+
+const category = {
+  name: "Libros Literarios",
+  slug: "libros",
+  description: "Nuestra colección de literatura clásica y contemporánea"
+};
+
+// Datos de libros con más ejemplos y rutas corregidas
+const books = [
+  {
+    title: "Spiderman: No Way Home",
+    author: "Marvel Comics",
+    cover: "/src/assets/img/libros/llamame.webp",
+    price: "180 bs"
+  },
+  {
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/src/assets/img/libros/ojala.webp",
+    price: "200 bs"
+  },
+  {
+    title: "Watchmen",
+    author: "Alan Moore",
+    cover: "/src/assets/img/libros/ojos.webp",
+    price: "220 bs"
+  },
+  {
+    title: "V de Vendetta",
+    author: "Alan Moore",
+    cover: "/src/assets/img/libros/pizarn.webp",
+    price: "190 bs"
+  },
+  {
+    title: "Sandman",
+    author: "Neil Gaiman",
+    cover: "/src/assets/img/libros/caos.webp",
+    price: "210 bs"
+  },
+  {
+    title: "Saga",
+    author: "Brian K. Vaughan",
+    cover: "/src/assets/img/libros/pizarn2.webp",
+    price: "175 bs"
+  },
+  {
+    title: "Maus",
+    author: "Art Spiegelman",
+    cover: "/src/assets/img/libros/image-33-_1_.webp",
+    price: "195 bs"
+  },
+  {
+    title: "Persépolis",
+    author: "Marjane Satrapi",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "185 bs"
+  }
+];
+---
+
+<BookListLayout
+  title={`Categoría: ${category.name}`}
+  description={category.description}
+  category={category}
+  books={books}
+/>

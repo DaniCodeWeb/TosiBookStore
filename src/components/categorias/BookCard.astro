@@ -1,0 +1,19 @@
+---
+const { book } = Astro.props;
+---
+
+<div class="group relative overflow-hidden rounded-lg shadow-md">
+  <img
+    src={book.cover}
+    alt={book.title}
+    class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+    loading="lazy"
+  />
+  <div class="p-4">
+    <h3 class="font-bold text-lg truncate">{book.title}</h3>
+    <p class="text-blue-600 font-semibold">{book.price}</p>
+    <button class="mt-2 w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+      Ver Detalles
+    </button>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+---
+import MainLayout from '../../layouts/lading/MainLayout.astro';
+import BookListLayout from '../../layouts/BookListLayout.astro';
+
+// Datos de la categoría (rutas de imágenes corregidas)
+const category = {
+  name: "Novedades",
+  slug: "novedades",
+  description: "Descubre los mejores cómics de Marvel, DC y más"
+};
+
+// Datos de libros con más ejemplos y rutas corregidas
+const books = [
+  {
+    title: "Spiderman: No Way Home",
+    author: "Marvel Comics",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "180 bs"
+  },
+  {
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "200 bs"
+  },
+  {
+    title: "Watchmen",
+    author: "Alan Moore",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "220 bs"
+  },
+  {
+    title: "V de Vendetta",
+    author: "Alan Moore",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "190 bs"
+  },
+  {
+    title: "Sandman",
+    author: "Neil Gaiman",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "210 bs"
+  },
+  {
+    title: "Saga",
+    author: "Brian K. Vaughan",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "175 bs"
+  },
+  {
+    title: "Maus",
+    author: "Art Spiegelman",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "195 bs"
+  },
+  {
+    title: "Persépolis",
+    author: "Marjane Satrapi",
+    cover: "/assets/img/landing/Poesia.png",
+    price: "185 bs"
+  }
+];
+---
+
+<BookListLayout
+  title={`Categoría: ${category.name}`}
+  description={category.description}
+  category={category}
+  books={books}
+/>

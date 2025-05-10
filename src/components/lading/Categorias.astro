@@ -1,0 +1,66 @@
+---
+// Datos CORREGIDOS (añade el slug que necesitas para las rutas)
+const featuredCategories = [
+  {
+    title: "Comics",
+    slug: "comics",
+    description: "Descubre las últimas tendencias en literatura actual",
+    image: "src/assets/img/landing/comic.jpeg"
+  },
+  {
+    title: "Poesía",
+    slug: "poesia",
+    description: "Sumérgete en versos que transforman el alma",
+    image: "src/assets/img/landing/Poesia.png"
+  },
+  {
+    title: "Infantiles",
+    slug: "infantiles",
+    description: "Obras que han resistido el paso del tiempo",
+    image: "src/assets/img/landing/infantiles.png"
+  },
+];
+---
+
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4 max-w-6xl">
+    <h2 class="text-3xl font-bold text-center mb-12">Categorías Destacadas</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {featuredCategories.map(category => (
+        <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 flex flex-col h-full">
+          <div class="relative h-48 overflow-hidden">
+            <img
+              src={category.image || "/placeholder.svg"}
+              alt={`Categoría: ${category.title}`}
+              class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+            />
+          </div>
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-center">{category.title}</h3>
+            <p class="text-gray-600 mb-4 text-center flex-grow">{category.description}</p>
+            <div class="text-center">
+              <a
+                href={`/categoriasP/${category.slug}`}
+                class="inline-block text-blue-600 font-medium hover:underline"
+              >
+                Explorar →
+              </a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/categoriasP/ListaCategorias"
+        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        Ver todas las categorías
+      </a>
+    </div>
+  </div>
+</section>

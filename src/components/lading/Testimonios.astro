@@ -1,0 +1,41 @@
+---
+const testimonials = [
+  {
+    name: "Laura Martínez",
+    text: "TOSIBOOKSTORE se ha convertido en mi librería favorita. Siempre encuentro joyas literarias que no están en otros lugares.",
+    avatar: "/src/assets/img/landing/per2.jpg"
+  },
+  {
+    name: "Carlos Rodríguez",
+    text: "El servicio es excelente y la selección de libros es impresionante. Recomiendo totalmente esta librería a todos los amantes de la lectura.",
+    avatar: "/src/assets/img/landing/pers1.jpg"
+  },
+  {
+    name: "María González",
+    text: "Me encanta la sección de novedades, siempre está actualizada con los últimos lanzamientos. ¡No puedo dejar de comprar!",
+    avatar: "/src/assets/img/landing/per3.jpg"
+  }
+];
+---
+
+<section class="py-16 bg-gray-200">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">Lo que dicen nuestros lectores</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {testimonials.map(testimonial => (
+        <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="flex items-center mb-4">
+            <img
+              src={testimonial.avatar || "/placeholder.svg"}
+              alt={testimonial.name}
+              class="w-12 h-12 rounded-full mr-4"
+            >
+            <h3 class="font-bold">{testimonial.name}</h3>
+          </div>
+          <p class="text-gray-600 italic">"{testimonial.text}"</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,98 @@
+---
+// Book data
+const newReleases = [
+  {
+    title: "La Ciudad de Vapor",
+    author: "Carlos Ruiz Zafón",
+    cover: "/src/assets/img/landing/poetx.png",
+    price: "200 bs"
+  },
+  {
+    title: "Reina Roja",
+    author: "Juan Gómez-Jurado",
+    cover: "/src/assets/img/landing/ojala.png",
+    price: "200 bs"
+  },
+  {
+    title: "El Italiano",
+    author: "Arturo Pérez-Reverte",
+    cover: "/src/assets/img/landing/ojos.png",
+    price: "200 bs"
+  },
+  {
+    title: "Línea de Fuego",
+    author: "Arturo Pérez-Reverte",
+    cover: "/src/assets/img/landing/neruda.png",
+    price: "200 bs"
+  }
+];
+---
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12" data-aos="fade-up">Últimas Novedades</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <!-- Info Card - Takes up 1 column on large screens -->
+      <div class="lg:col-span-1 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6 h-full flex flex-col justify-between" data-aos="fade-right" data-aos-delay="100">
+        <div>
+          <h3 class="text-2xl font-bold text-blue-700 mb-4">Descubre Nuevos Mundos</h3>
+          <p class="text-gray-700 mb-4">
+            Explora nuestra colección de últimas novedades literarias cuidadosamente seleccionadas para los amantes
+            de la lectura.
+          </p>
+          <p class="text-gray-700">
+            Cada mes actualizamos nuestro catálogo con los títulos más esperados de autores nacionales e
+            internacionales.
+          </p>
+        </div>
+        <div class="mt-6">
+          <button class="w-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors py-2 px-4 rounded-lg font-medium">
+            Suscríbete a novedades
+          </button>
+        </div>
+      </div>
+
+      <!-- Book Grid - Takes up 4 columns on large screens -->
+      <div class="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {newReleases.map((book, index) => (
+          <div class="group" data-aos="fade-up" data-aos-delay={100 + (index * 50)}>
+            <div class="relative overflow-hidden w-full h-64 rounded-lg mb-3">
+              <img
+                src={book.cover || "/placeholder.svg"}
+                alt={book.title}
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <button class="bg-white text-gray-800 px-4 py-2 rounded-full font-medium">
+                  Ver detalles
+                </button>
+              </div>
+            </div>
+            <h3 class="font-bold text-lg">{book.title}</h3>
+            <p class="text-gray-600">{book.author}</p>
+            <p class="font-bold text-blue-600 mt-1">{book.price}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="text-center mt-12">
+      <a
+        href="/novedades/ListaNovedades"
+        class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        Ver todas las novedades
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // AOS is assumed to be initialized elsewhere in your Astro project
+  // If not, you can add this to your layout or main script file:
+  // import AOS from 'aos';
+  // AOS.init();
+</script>

@@ -1,5 +1,6 @@
 {
   "root": true,
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
@@ -15,7 +16,11 @@
     "strictPropertyInitialization": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/html/components/*"],
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@assets/*": ["src/assets/*"],
+      "@lib/*": ["src/lib/*"]
     },
     /* Language and Environment */
     "target": "es6",

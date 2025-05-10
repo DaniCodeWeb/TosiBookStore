@@ -1,0 +1,26 @@
+---
+const { category } = Astro.props;
+---
+
+<a
+  href={`/categoriasP/${category.slug}`}
+  class="block group rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+>
+  <div class="relative h-48">
+    <img
+      src={category.cover}
+      alt={category.title}
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-end p-4">
+      <div>
+        <h3 class="text-white text-xl font-bold">{category.title}</h3>
+        <p class="text-gray-200">{category.count} libros</p>
+      </div>
+    </div>
+  </div>
+  <div class="p-4 bg-white">
+    <p class="text-gray-600">{category.description}</p>
+  </div>
+</a>

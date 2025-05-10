@@ -1,0 +1,36 @@
+---
+// Importaciones
+import MainLayout from '../../layouts/lading/MainLayout.astro';
+import CategoryCard from '../../components/categorias/CategoryCard.astro';
+
+// Datos de categorías (puedes mover esto a un archivo aparte)
+const categories = [
+  {
+    slug: "comics",
+    title: "Cómics",
+    description: "Los mejores cómics Marvel y DC",
+    cover: "/src/assets/img/landing/comic.jpeg  ",
+    count: 42
+  },
+  {
+    slug: "poesia",
+    title: "Poesía",
+    description: "Versos que inspiran",
+    cover: "/src/assets/img/landing/Poesia.png",
+    count: 36
+  }
+  // Agrega más categorías...
+];
+---
+
+<MainLayout title="Explora nuestras categorías">
+  <section id="ListaCategorias" class="py-12 px-4">
+    <h1 class="text-3xl font-bold text-center mb-8">Nuestras Categorías</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      {categories.map(category => (
+        <CategoryCard category={category} />
+      ))}
+    </div>
+  </section>
+</MainLayout>

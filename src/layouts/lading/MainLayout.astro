@@ -1,0 +1,126 @@
+---
+import Navbar from '../../components/lading/Navbar.astro';
+import Footer from '../../components/lading/Footer.astro';
+import InicioSesion from '../../pages/auth/login/InicioSesion.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  hasAOS?: boolean;
+}
+
+const {
+  title,
+  description = "Tu librería online con las mejores novedades literarias",
+  hasAOS = true
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <title>{title} | TOSIBOOKSTORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    {hasAOS &&
+      <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    }
+  </head>
+  <body class="min-h-screen flex flex-col overflow-x-hidden">
+    <Navbar />
+    <main class="flex-grow pt-20 overflow-x-hidden w-full">
+      <div class="overflow-x-hidden w-full">
+        <slot />
+      </div>
+    </main>
+    <Footer />
+    <InicioSesion
+      data-aos="fade-down"
+      data-aos-duration="800"
+      data-aos-easing="ease-in-out-back"
+    />
+
+    {hasAOS && (
+      <>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+        <script is:inline>
+          document.addEventListener('DOMContentLoaded', () => {
+            // Espera a que todos los recursos estén listos
+            const initAOS = () => {
+              if (typeof AOS !== 'undefined') {
+                AOS.init({
+                  duration: 600,
+                  easing: 'ease-in-out-back',
+                  once: true,
+                  mirror: false,
+                  offset: 120,
+                  disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                });
+
+                // Refresh después de 1s para componentes dinámicos
+                setTimeout(() => AOS.refresh(), 1000);
+
+                // Añadir refresh adicional en caso de cambio de tamaño de ventana
+                window.addEventListener('resize', () => {
+                  setTimeout(() => AOS.refresh(), 100);
+                });
+              } else {
+                // Reintento si AOS no está cargado aún
+                setTimeout(initAOS, 100);
+              }
+            };
+            initAOS();
+
+            // Prevenir desplazamiento horizontal
+            function preventHorizontalScroll() {
+              if (window.scrollX !== 0) {
+                window.scrollTo(0, window.scrollY);
+              }
+            }
+
+            // Verificar y corregir posición horizontal cada 200ms
+            setInterval(preventHorizontalScroll, 200);
+          });
+        </script>
+        <script is:inline>
+          // Función para scroll suave con offset
+          function smoothScroll(targetId) {
+            const target = document.querySelector(targetId);
+            if (target) {
+              const navbarHeight = document.querySelector('nav').offsetHeight;
+              const targetPosition = target.offsetTop - navbarHeight;
+
+              window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+              });
+
+              // Forzar refresh de AOS después del scroll
+              setTimeout(() => {
+                if (typeof AOS !== 'undefined') {
+                  AOS.refresh();
+                }
+              }, 800);
+            }
+          }
+
+          // Configurar event listeners para todos los enlaces internos
+          document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+              e.preventDefault();
+              const targetId = this.getAttribute('href');
+              if (targetId !== '#') {
+                smoothScroll(targetId);
+                history.pushState(null, null, targetId);
+              }
+            });
+          });
+        </script>
+      </>
+    )}
+  </body>
+</html>

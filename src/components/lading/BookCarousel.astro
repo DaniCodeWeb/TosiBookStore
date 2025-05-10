@@ -1,0 +1,296 @@
+---
+const books = [
+  {
+    id: 1,
+    title: "PIZARNIK",
+    author: "Edición Completa",
+    cover: "/src/assets/img/landing/pizarn.png", // Corregido: eliminado /src/
+    url: "/libros/pizarnik"
+  },
+  {
+    id: 2,
+    title: "PIZARNIK",
+    author: "Edición Completa",
+    cover: "/src/assets/img/landing/pizarn2.png", // Corregido: eliminado /src/
+    url: "/libros/perfecto-caos"
+  },
+  {
+    id: 3,
+    title: "Llamame por tu nombre",
+    author: "André Aciman",
+    cover: "/src/assets/img/landing/llamame.png", // Corregido: eliminado /src/
+    url: "/libros/llamame-por-tu-nombre"
+  },
+  {
+    id: 4,
+    title: "El Italiano",
+    author: "Arturo Pérez-Reverte",
+    cover: "/src/assets/img/landing/llamame.png", // Usa una imagen existente como ejemplo
+    url: "/libros/el-italiano"
+  },
+  {
+    id: 5,
+    title: "Línea de Fuego",
+    author: "Arturo Pérez-Reverte",
+    cover: "/src/assets/img/landing/pizarn.png", // Usa una imagen existente como ejemplo
+    url: "/libros/linea-de-fuego"
+  },
+  {
+    id: 6,
+    title: "Línea de Fuego",
+    author: "Arturo Pérez-Reverte",
+    cover: "/src/assets/img/landing/pizarn.png", // Usa una imagen existente como ejemplo
+    url: "/libros/linea-de-fuego"
+  }
+];
+---
+
+<div class="carousel-outer-container mx-auto max-w-4xl relative py-8">
+  <!-- Botones de navegación fuera del contenedor del carrusel -->
+  <button
+    class="carousel-button prev absolute left-0 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-1000 z-20 transition-all duration-300 transform -translate-x-1/2"
+    aria-label="Libros anteriores"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- Contenedor del carrusel con máscara para ocultar desbordamiento -->
+  <div class="carousel-container relative overflow-hidden py-4 px-12">
+    <!-- Wrapper con ancho fijo para centrar las tarjetas visibles -->
+    <div class="carousel-wrapper flex gap-6 transition-transform duration-300 ease-in-out">
+      {books.map((book) => (
+        <a
+          href={book.url}
+          class="book-card block transform transition-all duration-300 hover:scale-105 min-w-[200px] max-w-[200px] flex-shrink-0"
+          aria-label={`Ver ${book.title} por ${book.author}`}
+        >
+          <div class="relative overflow-hidden rounded-lg shadow-lg">
+            <img
+              src={book.cover || "/placeholder.svg"}
+              alt={`Portada de ${book.title}`}
+              class="h-64 w-full object-cover"
+              width="200"
+              height="256"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity"></div>
+          </div>
+          <div class="book-info mt-3 text-center px-2">
+            <h3 class="font-bold text-lg">{book.title}</h3>
+            <p class="text-sm text-gray-600">{book.author}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <!-- Botón siguiente -->
+  <button
+    class="carousel-button next absolute right-0 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/80 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 z-20 transition-all duration-300 transform translate-x-1/2"
+    aria-label="Siguientes libros"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+  <>
+  <div class="text-center text-white"> <!-- Contenedor centrado con texto blanco -->
+    <h2 class="text-2xl font-bold mb-8">Descubre más...</h2>
+    <div class="flex justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Indicadores de página (opcional) -->
+  <div class="carousel-indicators flex justify-center mt-6 gap-2">
+    <!-- Se generarán dinámicamente con JavaScript -->
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carouselContainer = document.querySelector('.carousel-container');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    const carouselWrapper = document.querySelector('.carousel-wrapper');
+    const bookCards = document.querySelectorAll('.book-card');
+    const indicatorsContainer = document.querySelector('.carousel-indicators');
+
+    if (bookCards.length === 0) return;
+
+    // Configuración
+    const visibleCards = 3; // Número de tarjetas visibles a la vez
+    const cardWidth = bookCards[0].offsetWidth;
+    const cardGap = 24; // gap-6 = 1.5rem = 24px
+    const totalCardWidth = cardWidth + cardGap;
+
+    let currentPage = 0;
+    const totalPages = Math.ceil(bookCards.length / visibleCards);
+
+    // Crear indicadores de página
+    for (let i = 0; i < totalPages; i++) {
+      const indicator = document.createElement('button');
+      indicator.classList.add('w-2', 'h-2', 'rounded-full', 'bg-gray-300', 'hover:bg-blue-500', 'transition-colors');
+      indicator.setAttribute('aria-label', `Página ${i + 1}`);
+      indicator.dataset.page = i;
+
+      if (i === 0) {
+        indicator.classList.remove('bg-gray-300');
+        indicator.classList.add('bg-blue-500');
+      }
+
+      indicator.addEventListener('click', () => {
+        goToPage(i);
+      });
+
+      indicatorsContainer.appendChild(indicator);
+    }
+
+    // Función para actualizar los indicadores
+    const updateIndicators = () => {
+      const indicators = indicatorsContainer.querySelectorAll('button');
+      indicators.forEach((indicator, index) => {
+        if (index === currentPage) {
+          indicator.classList.remove('bg-gray-300');
+          indicator.classList.add('bg-blue-500');
+        } else {
+          indicator.classList.remove('bg-blue-500');
+          indicator.classList.add('bg-gray-300');
+        }
+      });
+    };
+
+    // Función para ir a una página específica
+    const goToPage = (page) => {
+      currentPage = page;
+      const position = page * (visibleCards * totalCardWidth);
+      carouselWrapper.style.transform = `translateX(-${position}px)`;
+      updateButtons();
+      updateIndicators();
+    };
+
+    // Función para actualizar el estado de los botones
+    const updateButtons = () => {
+      prevButton.disabled = currentPage <= 0;
+      nextButton.disabled = currentPage >= totalPages - 1;
+
+      // Actualizar estilos visuales
+      if (prevButton.disabled) {
+        prevButton.classList.add('opacity-30', 'cursor-not-allowed');
+      } else {
+        prevButton.classList.remove('opacity-30', 'cursor-not-allowed');
+      }
+
+      if (nextButton.disabled) {
+        nextButton.classList.add('opacity-30', 'cursor-not-allowed');
+      } else {
+        nextButton.classList.remove('opacity-30', 'cursor-not-allowed');
+      }
+    };
+
+    // Event listeners para los botones
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 0) {
+        goToPage(currentPage - 1);
+      }
+    });
+
+    nextButton.addEventListener('click', () => {
+      if (currentPage < totalPages - 1) {
+        goToPage(currentPage + 1);
+      }
+    });
+
+    // Inicializar
+    updateButtons();
+
+    // Ajustes para responsive
+    const handleResize = () => {
+      // Recalcular dimensiones
+      const newCardWidth = bookCards[0].offsetWidth;
+      const newTotalCardWidth = newCardWidth + cardGap;
+
+      // Reposicionar el carrusel
+      goToPage(0);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Inicializar el carrusel con las tarjetas centradas
+    const centerCarousel = () => {
+      // Establecer el ancho del wrapper para mostrar exactamente el número de tarjetas visibles
+      const wrapperWidth = bookCards.length * totalCardWidth;
+      carouselWrapper.style.width = `${wrapperWidth}px`;
+
+      // Centrar las tarjetas inicialmente
+      goToPage(0);
+    };
+
+    centerCarousel();
+  });
+</script>
+
+<style>
+  .carousel-outer-container {
+    position: relative;
+  }
+
+  .carousel-container {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .carousel-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  .carousel-wrapper {
+    will-change: transform;
+  }
+
+  .carousel-button {
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .carousel-button:hover:not(:disabled) {
+    opacity: 1;
+  }
+
+  .carousel-button:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+
+  .book-card {
+    flex: 0 0 auto;
+    transition: all 0.3s ease;
+  }
+
+  /* Efecto de desvanecimiento en los bordes */
+  .carousel-container::before,
+  .carousel-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .carousel-container::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  }
+
+  .carousel-container::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+import MainLayout from '../layouts/lading/MainLayout.astro';
+import Carrusel from '../components/lading/Carrusel.astro';
+import Sidebar from '../components/lading/Sidebar.astro';
+import LibrosLanding from '../components/lading/LibrosLanding.astro';
+import Novedades from '../components/lading/Novedades.astro';
+import Preventas from '../components/lading/Preventas.astro';
+import Categorias from "../components/lading/Categorias.astro";
+import Testimonios from '../components/lading/Testimonios.astro';
+import Contactos from '../components/lading/Contactos.astro';
+
+// En la parte superior del archivo, donde defines las props/variables
+const { isLoggedIn = false } = Astro.props;
+---
+
+<MainLayout title="Inicio">
+  <!-- Contenedor principal con overflow-x-hidden -->
+  <div class="overflow-x-hidden w-full">
+    <!-- Sección Inicio (Carrusel + Autores) -->
+    <div id="inicio" class="min-h-screen grid grid-cols-1 md:grid-cols-4 overflow-hidden">
+      <!-- Barra lateral -->
+      <div class="hidden md:block md:col-span-1 p-4 bg-gray-50" data-aos="fade-right" data-aos-delay="100">
+        <Sidebar />
+      </div>
+
+      <!-- Área de contenido principal -->
+      <div class="col-span-1 md:col-span-3 flex flex-col overflow-hidden">
+        <div class="flex-grow" data-aos="fade-in">
+          <Carrusel />
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección Libros - Cambiado a fade-in para evitar desplazamiento lateral -->
+    <div id="libros" class="min-h-screen py-16 overflow-hidden" data-aos="fade-left" data-aos-delay="150">
+      <LibrosLanding
+        data-aos="fade-up"
+        data-aos-duration="800"
+        data-aos-easing="ease-in-out-back"
+        class="h-full"
+      />
+    </div>
+
+    <!-- Sección Novedades - Cambiado a fade-in para evitar desplazamiento lateral -->
+    <div id="novedades" class="min-h-screen py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="100">
+      <Novedades class="h-full" />
+    </div>
+
+    <!-- Sección Categorías -->
+    <div id="categorias" class="min-h-screen py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="150">
+      <Categorias class="h-full" />
+    </div>
+
+    <!-- Sección Preventas -->
+    <div id="preventas" class="min-h-screen py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="200">
+      <Preventas class="h-full" />
+    </div>
+
+    <!-- Sección Testimonios -->
+    <div id="testimonios" class="h-[70vh] py-16 overflow-hidden" data-aos="fade-in" data-aos-delay="250">
+      <Testimonios class="h-full" />
+    </div>
+
+    <!-- Sección Contactos - Solo visible cuando NO está logueado -->
+    {!isLoggedIn && (
+      <div
+        id="contactos"
+        class="h-[50vh] min-h-[600px] flex items-center justify-center py-8 overflow-hidden"
+        data-aos="fade-in"
+        data-aos-delay="300"
+      >
+        <div class="w-full h-full max-w-8xl mx-4 text-center">
+          <Contactos />
+        </div>
+      </div>
+    )}
+  </div>
+</MainLayout>
+
+<style>
+  /* Estilos globales */
+  :global(html), :global(body) {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    scroll-behavior: smooth; /* Habilitar scroll suave nativo */
+  }
+
+  /* Offset para navbar fijo */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+</style>
