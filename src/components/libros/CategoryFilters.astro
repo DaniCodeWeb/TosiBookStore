@@ -1,0 +1,38 @@
+---
+interface Props {
+  activeFilter: string;
+  baseUrl: string;
+}
+
+const { activeFilter, baseUrl } = Astro.props;
+
+const filters = [
+  { id: 'all', name: 'Todos' },
+  { id: 'author', name: 'Autor' },
+  { id: 'title', name: 'Nombre' },
+  { id: 'publisher', name: 'Editorial' }
+];
+
+// Map filter IDs to colors
+const filterColors = {
+  all: 'bg-blue-600 text-white',
+  author: 'hover:bg-yellow-400',
+  title: 'hover:bg-red-500',
+  publisher: 'hover:bg-green-500'
+};
+---
+
+<div class="mb-8 flex flex-wrap gap-3 justify-center" data-aos="fade-up" data-aos-delay="100">
+  {filters.map(filter => (
+    <a
+      href={`${baseUrl}?filter=${filter.id}`}
+      class={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+        activeFilter === filter.id
+          ? filterColors[filter.id]
+          : 'bg-gray-200 ' + filterColors[filter.id]
+      }`}
+    >
+      {filter.name}
+    </a>
+  ))}
+</div>

@@ -1,14 +1,61 @@
 ---
-// Importa cualquier componente necesario
-import MainLayout from '../layouts/lading/MainLayout.astro';
+import MainLayout from './lading/MainLayout.astro';
+import BookGrid from '../components/libros/BookGrid.astro';
+import Pagination from '../components/libros/Pagination.astro';
+import CategorySearch from '../components/libros/CategorySearch.astro';
+import CategoryFilters from '../components/libros/CategoryFilters.astro';
+import { Book } from '../components/libros/BookCard.astro';
 
-// Define las props que aceptará
-const {
-  title,          // Título de la página
-  description,    // Descripción meta
-  category,       // Datos de la categoría {name, description}
-  books           // Array de libros
-} = Astro.props;
+// Define the props that this layout accepts
+interface Props {
+  title: string;
+  description: string;
+  category: {
+    name: string;
+    description: string;
+    slug: string;
+  };
+  books: Book[];
+}
+
+const { title, description, category, books } = Astro.props;
+
+// Get pagination parameters from URL
+const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
+const itemsPerPage = 8; // Number of books per page
+const activeFilter = Astro.url.searchParams.get('filter') || 'all';
+const searchQuery = Astro.url.searchParams.get('search') || '';
+
+// Filter books based on active filter and search query
+let filteredBooks = [...books];
+
+if (searchQuery) {
+  filteredBooks = filteredBooks.filter(book => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      book.title.toLowerCase().includes(searchLower) ||
+      book.author.toLowerCase().includes(searchLower)
+    );
+  });
+}
+
+if (activeFilter !== 'all') {
+  filteredBooks = filteredBooks.filter(book => {
+    switch (activeFilter) {
+      case 'author':
+        return book.author; // Filter by author presence
+      case 'title':
+        return book.title; // Filter by title presence
+      case 'publisher':
+        return book.publisher; // Filter by publisher presence
+      default:
+        return true;
+    }
+  });
+}
+
+// Base URL for pagination and filters
+const baseUrl = `/libros/${category.slug}`;
 ---
 
 <MainLayout title={title} description={description}>
@@ -21,65 +68,24 @@ const {
     </div>
 
     <!-- Buscador -->
-    <div class="mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="50">
-      <div class="relative">
-        <input
-          type="text"
-          placeholder={`Buscar en ${category.name.toLowerCase()}...`}
-          class="w-full py-3 px-5 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button class="absolute right-3 top-3 text-gray-500 hover:text-blue-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </button>
-      </div>
-    </div>
+    <CategorySearch categoryName={category.name} baseUrl={baseUrl} />
 
     <!-- Filtros de categoría -->
-    <div class="mb-8 flex flex-wrap gap-3 justify-center" data-aos="fade-up" data-aos-delay="100">
-      <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-medium">Todos</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-yellow-400 rounded-full text-sm font-medium">Autor</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-red-500 rounded-full text-sm font-medium">Nombre</button>
-      <button class="px-4 py-2 bg-gray-200 hover:bg-green-500 rounded-full text-sm font-medium">Editoral</button>
-    </div>
+    <CategoryFilters activeFilter={activeFilter} baseUrl={baseUrl} />
 
     <!-- Grid de libros -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-      {books.map((book, index) => (
-        <div class="group" data-aos="fade-up" data-aos-delay={150 + (index * 50)}>
-          <div class="relative overflow-hidden w-full h-64 rounded-lg shadow-md mb-4">
-            <img
-              src={book.cover || "/placeholder.svg"}
-              alt={`Portada de ${book.title}`}
-              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
-              <button class="bg-white text-gray-800 px-4 py-2 rounded-full font-medium text-sm hover:bg-blue-600 hover:text-white transition-colors">
-                Añadir al carrito
-              </button>
-            </div>
-          </div>
-          <h3 class="font-bold text-lg">{book.title}</h3>
-          <p class="text-gray-600 text-sm">{book.author}</p>
-          <p class="font-bold text-blue-600 mt-1">{book.price}</p>
-        </div>
-      ))}
-    </div>
+    <BookGrid
+      books={filteredBooks}
+      itemsPerPage={itemsPerPage}
+      currentPage={currentPage}
+    />
 
     <!-- Paginación -->
-    <div class="mt-12 flex justify-center" data-aos="fade-up" data-aos-delay="200">
-      <nav class="flex items-center space-x-2">
-        <a href="#" class="px-4 py-2 border rounded-lg text-white bg-blue-600 border-blue-600 hover:bg-blue-700 transition-colors">1</a>
-        <a href="#" class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">2</a>
-        <a href="#" class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors">3</a>
-        <a href="#" class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1">
-          Siguiente
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
-      </nav>
-    </div>
+    <Pagination
+      totalItems={filteredBooks.length}
+      itemsPerPage={itemsPerPage}
+      currentPage={currentPage}
+      baseUrl={baseUrl}
+    />
   </main>
 </MainLayout>

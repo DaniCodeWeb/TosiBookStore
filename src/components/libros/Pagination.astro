@@ -1,0 +1,80 @@
+---
+interface Props {
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+  baseUrl: string;
+}
+
+const { totalItems, itemsPerPage, currentPage, baseUrl } = Astro.props;
+
+// Calculate total pages
+const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+// Generate an array of page numbers
+const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+// Determine if we should show ellipsis
+const showEllipsis = totalPages > 5;
+
+// Create a function to determine which page numbers to show
+function getVisiblePageNumbers() {
+  if (!showEllipsis) return pageNumbers;
+
+  if (currentPage <= 3) {
+    // Near the start
+    return [...pageNumbers.slice(0, 3), '...', totalPages];
+  } else if (currentPage >= totalPages - 2) {
+    // Near the end
+    return [1, '...', ...pageNumbers.slice(totalPages - 3)];
+  } else {
+    // In the middle
+    return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
+  }
+}
+
+const visiblePageNumbers = getVisiblePageNumbers();
+---
+
+<div class="mt-12 flex justify-center">
+  <nav class="flex items-center space-x-2">
+    {currentPage > 1 && (
+      <a
+        href={`${baseUrl}?page=${currentPage - 1}`}
+        class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        Anterior
+      </a>
+    )}
+
+    {visiblePageNumbers.map((page) =>
+      page === '...' ? (
+        <span class="px-4 py-2">...</span>
+      ) : (
+        <a
+          href={`${baseUrl}?page=${page}`}
+          class={`px-4 py-2 border rounded-lg ${currentPage === page
+            ? 'text-white bg-blue-600 border-blue-600 hover:bg-blue-700'
+            : 'hover:bg-gray-100'} transition-colors`}
+        >
+          {page}
+        </a>
+      )
+    )}
+
+    {currentPage < totalPages && (
+      <a
+        href={`${baseUrl}?page=${currentPage + 1}`}
+        class="px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-1"
+      >
+        Siguiente
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    )}
+  </nav>
+</div>

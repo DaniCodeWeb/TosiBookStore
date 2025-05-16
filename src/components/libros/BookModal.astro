@@ -1,0 +1,179 @@
+---
+// Props: Recibe los datos del libro seleccionado
+interface Props {
+  book: {
+    id: string;
+    title: string;
+    author: string;
+    cover: string;
+    price: string;
+    description: string;
+    category: string;
+  };
+}
+
+const { book } = Astro.props;
+---
+
+<div id="book-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+  <!-- Overlay de fondo -->
+  <div class="absolute inset-0 bg-black bg-opacity-80" id="modal-overlay"></div>
+
+  <!-- Contenedor del modal -->
+  <div class="relative bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-5xl mx-4 flex flex-col md:flex-row opacity-90">
+    <!-- Botón de cerrar -->
+    <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Lado izquierdo: Detalles del libro -->
+    <div class="w-full md:w-1/2 p-8 bg-gray-50">
+      <div class="flex justify-center mb-6">
+        <img
+          src={book.cover}
+          alt={book.title}
+          class="h-64 object-contain rounded-lg shadow-md"
+        />
+      </div>
+      <div class="space-y-4">
+        <h2 class="text-3xl font-bold text-gray-800">{book.title}</h2>
+        <p class="text-xl text-gray-600">Autor: {book.author}</p>
+        <p class="text-2xl font-semibold text-blue-600">{book.price}</p>
+        <p class="text-gray-700">{book.description}</p>
+      </div>
+    </div>
+
+    <!-- Lado derecho: Formulario de compra -->
+    <div class="w-full md:w-1/2 p-8 bg-white border-l border-gray-200">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6">Completar compra</h3>
+
+      <!-- Formulario -->
+      <form id="purchase-form" class="space-y-4">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+          <input
+            type="text"
+            id="name"
+            required
+            class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            required
+            class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono (WhatsApp)</label>
+          <input
+            type="tel"
+            id="phone"
+            required
+            class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="flex flex-col gap-3 pt-4">
+          <!-- Botón WhatsApp -->
+          <button
+            type="button"
+            id="whatsapp-btn"
+            class="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-md flex items-center justify-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-6.29 3.617c-.545 0-1.06-.113-1.53-.318l-.114-.04-1.12.293.293-1.092-.04-.113c-.21-.51-.318-1.046-.318-1.59 0-2.183 1.776-3.96 3.96-3.96 1.06 0 2.04.416 2.78 1.16.74.744 1.16 1.723 1.16 2.78 0 2.186-1.77 3.96-3.96 3.96m7.32-11.18c-.23-.24-.5-.36-.82-.36-.16 0-.31.04-.45.08-.33.12-.75.51-.92.68-.28.28-.51.6-.62.92-.04.16-.12.3-.12.47 0 .24.08.47.24.66.13.16.28.3.45.44.51.55 1.12.98 1.7 1.31.44.23.9.39 1.38.47.16.04.33.08.49.08.16 0 .32-.04.47-.12.16-.08.3-.2.45-.35.24-.24.36-.5.36-.82 0-.08-.01-.17-.03-.25-.1-.59-.43-1.14-.84-1.55-.41-.41-.96-.74-1.55-.84-.08-.01-.17-.03-.25-.03"/>
+            </svg>
+            Comprar por WhatsApp
+          </button>
+
+          <!-- Botón Añadir al carrito -->
+          <button
+            type="button"
+            id="add-to-cart"
+            class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md"
+          >
+            Añadir al carrito
+          </button>
+
+          <!-- QR de pago -->
+          <div class="border-t border-gray-200 pt-4 text-center">
+            <p class="text-sm text-gray-600 mb-2">O escanea para pagar:</p>
+            <img
+              src="/assets/img/qr-pago.png"
+              alt="QR de pago"
+              class="h-24 mx-auto"
+            />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Script para manejar el modal -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Elementos del modal
+    const bookModal = document.getElementById('book-modal');
+    const closeModal = document.getElementById('close-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
+
+    // Función para abrir el modal
+    window.openBookModal = (bookData) => {
+      if (bookModal) {
+        // Actualizar datos del modal (si es dinámico)
+        document.getElementById('book-title').textContent = bookData.title;
+        document.getElementById('book-cover').src = bookData.cover;
+        // ... otros campos
+
+        bookModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    // Cerrar modal
+    if (closeModal) {
+      closeModal.addEventListener('click', () => {
+        bookModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      });
+    }
+
+    // Cerrar al hacer clic en overlay
+    if (modalOverlay) {
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          bookModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // Botón WhatsApp
+    const whatsappBtn = document.getElementById('whatsapp-btn');
+    if (whatsappBtn) {
+      whatsappBtn.addEventListener('click', () => {
+        const phone = document.getElementById('phone').value;
+        const message = `¡Hola! Quiero comprar "${book.title}" por ${book.price}. Mis datos:\nNombre: ${document.getElementById('name').value}\nEmail: ${document.getElementById('email').value}`;
+        window.open(`https://wa.me/591${phone}?text=${encodeURIComponent(message)}`, '_blank');
+      });
+    }
+
+    // Botón Añadir al carrito
+    const addToCartBtn = document.getElementById('add-to-cart');
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', () => {
+        // Aquí iría la lógica para añadir al carrito
+        console.log('Añadido al carrito:', book);
+        alert(`"${book.title}" añadido al carrito`);
+      });
+    }
+  });
+</script>

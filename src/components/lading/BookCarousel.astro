@@ -1,11 +1,13 @@
 ---
+
+
 const books = [
   {
     id: 1,
     title: "PIZARNIK",
     author: "Edición Completa",
     cover: "/src/assets/img/landing/pizarn.png", // Corregido: eliminado /src/
-    url: "/libros/ListaLibros.astro"
+    url: "/administracion/index.astro"
   },
   {
     id: 2,
@@ -44,7 +46,6 @@ const books = [
   }
 ];
 ---
-
 <div class="carousel-outer-container mx-auto max-w-4xl relative py-8 rounded-">
   <!-- Botones de navegación fuera del contenedor del carrusel -->
   <button
@@ -59,7 +60,7 @@ const books = [
   <!-- Contenedor del carrusel con máscara para ocultar desbordamiento -->
   <div class="carousel-container relative overflow-hidden py-4 px-12 rounded-xl">
     <!-- Wrapper con ancho fijo para centrar las tarjetas visibles -->
-    <div class="carousel-wrapper flex gap-6 transition-transform duration-300 ease-in-out rounded-sm ">
+    <div class="carousel-wrapper flex gap-6 transition-transform duration-300 ease-in-out rounded-sm">
       {books.map((book) => (
         <a
           href={book.url}
@@ -95,8 +96,8 @@ const books = [
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
     </svg>
   </button>
-  <>
-  <div class="text-center text-white"> <!-- Contenedor centrado con texto blanco -->
+
+  <div class="text-center text-white">
     <h2 class="text-2xl font-bold mb-8">Descubre más...</h2>
     <div class="flex justify-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -105,7 +106,7 @@ const books = [
     </div>
   </div>
 
-  <!-- Indicadores de página (opcional) -->
+  <!-- Indicadores de página -->
   <div class="carousel-indicators flex justify-center mt-6 gap-2">
     <!-- Se generarán dinámicamente con JavaScript -->
   </div>

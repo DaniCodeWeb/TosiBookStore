@@ -1,0 +1,49 @@
+---
+// src/components/libros/BookPagination.astro
+const { currentPage, totalPages, baseUrl } = Astro.props;
+---
+
+<nav class="flex justify-center mt-8">
+  <ul class="flex items-center space-x-2">
+    <!-- Botón Anterior -->
+    <li>
+      <a
+        href={`${baseUrl}?page=${currentPage - 1}`}
+        class={`px-3 py-1 rounded ${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-100'}`}
+        aria-label="Página anterior"
+      >
+        &lt;
+      </a>
+    </li>
+
+    <!-- Páginas -->
+    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+      <li>
+        <a
+          href={`${baseUrl}?page=${page}`}
+          class={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-600 text-white' : 'hover:bg-gray-100'}`}
+        >
+          {page}
+        </a>
+      </li>
+    ))}
+
+    <!-- Botón Siguiente -->
+    <li>
+      <a
+        href={`${baseUrl}?page=${currentPage + 1}`}
+        class={`px-3 py-1 rounded ${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-100'}`}
+        aria-label="Página siguiente"
+      >
+        &gt;
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .pagination-link.active {
+    background-color: #3b82f6;
+    color: white;
+  }
+</style>

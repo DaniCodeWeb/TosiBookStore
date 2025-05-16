@@ -1,0 +1,41 @@
+---
+// src/components/libros/BookCard.astro
+interface Book {
+  id: string;
+  title: string;
+  author: string;
+  cover: string;
+  price: string;
+  category: string;
+}
+
+const { book } = Astro.props;
+---
+
+<div class="group">
+  <div class="relative overflow-hidden w-full h-64 rounded-lg shadow-md mb-4">
+    <img
+      src={book.cover || "/placeholder.svg"}
+      alt={`Portada de ${book.title}`}
+      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
+      <button
+        onclick="window.openBookModal({
+          id: '${book.id}',
+          title: '${book.title}',
+          author: '${book.author}',
+          cover: '${book.cover}',
+          price: '${book.price}',
+          category: '${book.category}'
+        })"
+        class="bg-white text-gray-800 px-4 py-2 rounded-full font-medium text-sm hover:bg-blue-600 hover:text-white transition-colors"
+      >
+        Comprar rápido
+      </button>
+    </div>
+  </div>
+  <h3 class="font-bold text-lg">{book.title}</h3>
+  <p class="text-gray-600 text-sm">{book.author}</p>
+  <p class="font-bold text-blue-600 mt-1">{book.price}</p>
+</div>

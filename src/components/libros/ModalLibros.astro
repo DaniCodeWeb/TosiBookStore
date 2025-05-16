@@ -1,0 +1,92 @@
+---
+// src/pages/libros/ModalLibros.astro
+---
+
+<!-- Este es un componente parcial que se incluye en el BookListLayout.astro -->
+<!-- No necesita renderizarse directamente, ya que se integra en el layout -->
+
+<script>
+  // Este script se incluye en el cliente
+  // La funcionalidad del modal está implementada en BookListLayout.astro
+  // Este archivo se usa principalmente como un punto de referencia para la estructura del modal
+  // y para permitir reutilización en caso de que se necesite en otras páginas
+
+  export const modalTemplateHTML = `
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- Imagen del libro -->
+      <div class="md:w-1/3">
+        <img
+          src="BOOK_COVER_URL"
+          alt="Portada del libro"
+          class="w-full h-auto object-cover rounded-lg shadow-lg"
+        />
+      </div>
+
+      <!-- Información del libro -->
+      <div class="md:w-2/3">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">BOOK_TITLE</h2>
+        <p class="text-xl text-gray-600 mb-6">por <span class="font-medium">BOOK_AUTHOR</span></p>
+
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2">Descripción</h3>
+          <p class="text-gray-700">BOOK_DESCRIPTION</p>
+        </div>
+
+        <div class="mb-6">
+          <div class="flex flex-wrap gap-4 mb-4">
+            <div class="bg-blue-100 px-4 py-2 rounded-full">
+              <span class="font-medium text-blue-800">Precio: BOOK_PRICE</span>
+            </div>
+            <div class="bg-green-100 px-4 py-2 rounded-full">
+              <span class="font-medium text-green-800">Stock: BOOK_STOCK</span>
+            </div>
+            <div class="bg-purple-100 px-4 py-2 rounded-full">
+              <span class="font-medium text-purple-800">Editorial: BOOK_PUBLISHER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de compra -->
+        <form class="bg-gray-50 p-6 rounded-lg shadow-sm">
+          <h3 class="text-xl font-semibold mb-4">¿Quieres este libro?</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 mb-2" for="nombre">Nombre completo</label>
+              <input type="text" id="nombre" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <div>
+              <label class="block text-gray-700 mb-2" for="telefono">Teléfono</label>
+              <input type="tel" id="telefono" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            <div>
+              <label class="block text-gray-700 mb-2" for="email">Email</label>
+              <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-gray-700 mb-2" for="cantidad">Cantidad</label>
+              <input type="number" id="cantidad" min="1" value="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-gray-700 mb-2" for="mensaje">Mensaje adicional</label>
+            <textarea id="mensaje" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+
+          <div class="mt-6">
+            <button type="button" id="whatsappButton" class="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.72.045.419-.1.824z"/>
+              </svg>
+              Comprar por WhatsApp
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+</script>
