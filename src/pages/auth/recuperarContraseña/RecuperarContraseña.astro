@@ -1,0 +1,187 @@
+---
+---
+
+<div id="recuperar-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+  <!-- Overlay de fondo oscuro -->
+  <div class="absolute inset-0 bg-black bg-opacity-80" id="recuperar-modal-overlay"></div>
+
+  <!-- Modal -->
+  <div class="relative bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-4xl mx-4 flex flex-col md:flex-row opacity-90 transform scale-95 opacity-0 transition-all duration-300">
+    <!-- Botón de cerrar -->
+    <button id="close-recuperar-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Lado izquierdo - Formulario -->
+    <div class="w-full md:w-1/2 p-8 bg-gray-200">
+      <div class="flex justify-center mb-6">
+        <img src="/src/assets/img/Tosilogo1.png" alt="TOSI" class="h-12" >
+      </div>
+
+      <div class="text-center mb-8">
+        <h3 class="text-xl font-semibold mb-2">¿Olvidaste tu contraseña?</h3>
+        <p class="text-gray-700">
+          No te preocupes, te enviaremos instrucciones para restablecerla.
+        </p>
+      </div>
+
+      <form class="space-y-6">
+        <div>
+          <label for="email-recuperacion" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+          <input
+            type="email"
+            id="email-recuperacion"
+            placeholder="Ingresa tu correo electrónico"
+            autocomplete="email"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium rounded-md transition-colors"
+        >
+          Enviar instrucciones
+        </button>
+
+        <div id="confirmar-envio" class="hidden">
+          <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+            <p class="text-center">
+              ¡Listo! Si tu correo está registrado, recibirás las instrucciones en breve.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center text-sm text-gray-600 pt-4">
+          <a href="#" id="volver-login" class="text-blue-600 hover:underline">Volver al inicio de sesión</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Lado derecho - Imagen -->
+    <div class="hidden md:block md:w-1/2 bg-black/90 p-8 text-white">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-8 text-center">RECUPERA TU ACCESO</h2>
+
+      <div class="flex justify-center items-center h-full">
+        <img
+          src="/src/assets/img/login/pajarosfondo.png"
+          alt="Ilustración de libro"
+          class="max-w-full max-h-80 object-contain"
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const recuperarModal = document.getElementById('recuperar-modal');
+    const closeRecuperarModal = document.getElementById('close-recuperar-modal');
+    const recuperarModalOverlay = document.getElementById('recuperar-modal-overlay');
+    const volverLoginBtn = document.getElementById('volver-login');
+    const loginModal = document.getElementById('login-modal');
+    const confirmarEnvio = document.getElementById('confirmar-envio');
+    const formularioRecuperar = document.querySelector('#recuperar-modal form');
+
+    // Función para abrir el modal con animación
+    const abrirRecuperarModal = () => {
+      if (recuperarModal) {
+        recuperarModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+        // Resetear formulario si ya se había usado
+        if (confirmarEnvio) {
+          confirmarEnvio.classList.add('hidden');
+        }
+
+        // Aplicar animación de entrada
+        setTimeout(() => {
+          const modalContent = recuperarModal.querySelector('.transform');
+          if (modalContent) {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+          }
+        }, 10);
+      }
+    };
+
+    // Función para cerrar el modal con animación
+    const cerrarRecuperarModal = () => {
+      if (recuperarModal) {
+        const modalContent = recuperarModal.querySelector('.transform');
+        if (modalContent) {
+          modalContent.classList.remove('scale-100', 'opacity-100');
+          modalContent.classList.add('scale-95', 'opacity-0');
+
+          // Esperar a que termine la animación antes de ocultar
+          setTimeout(() => {
+            recuperarModal.classList.add('hidden');
+            document.body.style.overflow = '';
+          }, 300);
+        } else {
+          recuperarModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      }
+    };
+
+    // Cerrar modal al hacer clic en el botón de cerrar
+    if (closeRecuperarModal) {
+      closeRecuperarModal.addEventListener('click', cerrarRecuperarModal);
+    }
+
+    // Cerrar modal al hacer clic en el overlay
+    if (recuperarModalOverlay) {
+      recuperarModalOverlay.addEventListener('click', (e) => {
+        if (e.target === recuperarModalOverlay) {
+          cerrarRecuperarModal();
+        }
+      });
+    }
+
+    // Cerrar modal al presionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && recuperarModal && !recuperarModal.classList.contains('hidden')) {
+        cerrarRecuperarModal();
+      }
+    });
+
+    // Switch de recuperación a login
+    if (volverLoginBtn) {
+      volverLoginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        cerrarRecuperarModal();
+
+        // Esperar a que termine la animación de cierre antes de abrir el login
+        setTimeout(() => {
+          if (loginModal) {
+            // Disparar evento personalizado para abrir el modal de login
+            const abrirLoginEvent = new Event('abrir-login-modal');
+            document.dispatchEvent(abrirLoginEvent);
+          }
+        }, 300);
+      });
+    }
+
+    // Manejar envío del formulario
+    if (formularioRecuperar) {
+      formularioRecuperar.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Mostrar mensaje de confirmación
+        if (confirmarEnvio) {
+          confirmarEnvio.classList.remove('hidden');
+        }
+
+        // Aquí iría la lógica real para enviar el correo
+        // Por ahora solo mostramos el mensaje
+      });
+    }
+
+    // Escuchar evento para abrir este modal desde otros componentes
+    document.addEventListener('abrir-recuperar-modal', abrirRecuperarModal);
+  });
+</script>

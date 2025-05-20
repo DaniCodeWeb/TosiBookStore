@@ -1,14 +1,14 @@
 ---
 ---
 
-<div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+<div id="registro-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
   <!-- Overlay de fondo oscuro -->
-  <div class="absolute inset-0 bg-black bg-opacity-80" id="modal-overlay"></div>
+  <div class="absolute inset-0 bg-black bg-opacity-80" id="registro-modal-overlay"></div>
 
   <!-- Modal -->
   <div class="relative bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-4xl mx-4 flex flex-col md:flex-row opacity-90 transform scale-95 opacity-0 transition-all duration-300">
     <!-- Botón de cerrar -->
-    <button id="close-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
+    <button id="close-registro-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -20,20 +20,41 @@
         <img src="/src/assets/img/Tosilogo1.png" alt="TOSI" class="h-12" >
       </div>
 
-      <div class="text-center mb-8">
+      <div class="text-center mb-6">
         <p class="text-gray-800 text-lg">
-          ¡Libros increíbles a precios que no podrás resistir! Perfectos para regalos o tu próxima lectura
+          ¡Únete a nuestra comunidad y disfruta de ofertas exclusivas para miembros!
         </p>
       </div>
 
-      <form class="space-y-6">
-        <p class="text-center text-gray-700 mb-2">Porfavor ingresa tus datos para iniciar sesión</p>
+      <form class="space-y-4">
+        <p class="text-center text-gray-700 mb-2">Completa tus datos para crear una cuenta</p>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <input
+              type="text"
+              id="nombre"
+              placeholder="Nombre"
+              class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+          </div>
+          <div>
+            <input
+              type="text"
+              id="apellido"
+              placeholder="Apellido"
+              class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+          </div>
+        </div>
 
         <div>
           <input
             type="email"
-            id="email"
-            placeholder="correo electrónico"
+            id="registro-email"
+            placeholder="Correo electrónico"
             autocomplete="email"
             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
@@ -43,22 +64,40 @@
         <div>
           <input
             type="password"
-            id="password"
-            placeholder="contraseña"
-            autocomplete="email"
+            id="registro-password"
+            placeholder="Contraseña"
             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-          <div class="text-right mt-1">
-            <a href="#" id="ir-a-recuperar" class="text-sm text-gray-600 hover:text-blue-600">¿Olvidaste tu contraseña?</a>
-          </div>
+        </div>
+
+        <div>
+          <input
+            type="password"
+            id="confirmar-password"
+            placeholder="Confirmar contraseña"
+            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+        </div>
+
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            id="terminos"
+            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            required
+          >
+          <label for="terminos" class="ml-2 block text-sm text-gray-600">
+            Acepto los <a href="/terminos" class="text-blue-600 hover:underline">términos y condiciones</a>
+          </label>
         </div>
 
         <button
           type="submit"
           class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium rounded-md transition-colors"
         >
-          Inicio de Sesión
+          Crear Cuenta
         </button>
 
         <div class="relative flex items-center justify-center">
@@ -77,18 +116,18 @@
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          Inicia Sesión con Google
+          Registrate con Google
         </button>
 
         <div class="text-center text-sm text-gray-600">
-          ¿No tienes una cuenta? <a href="#" id="ir-a-registro" class="text-blue-600 hover:underline">registrarte aquí</a>
+          ¿Ya tienes una cuenta? <a href="#" id="ir-a-login" class="text-blue-600 hover:underline">Inicia sesión aquí</a>
         </div>
       </form>
     </div>
 
     <!-- Lado derecho - Imagen -->
     <div class="hidden md:block md:w-1/2 bg-black/90 p-8 text-white">
-      <h2 class="text-2xl font-bold text-yellow-400 mb-8 text-center">BIENVENIDO A TOSIBOOKSTORE</h2>
+      <h2 class="text-2xl font-bold text-yellow-400 mb-8 text-center">ÚNETE A TOSIBOOKSTORE</h2>
 
       <div class="flex justify-center items-center h-full">
         <img
@@ -103,22 +142,22 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const loginButton = document.getElementById('login-button');
+    const registroButton = document.getElementById('registro-button');
+    const registroModal = document.getElementById('registro-modal');
+    const closeRegistroModal = document.getElementById('close-registro-modal');
+    const registroModalOverlay = document.getElementById('registro-modal-overlay');
+    const irALoginBtn = document.getElementById('ir-a-login');
     const loginModal = document.getElementById('login-modal');
-    const closeModal = document.getElementById('close-modal');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const irARegistroBtn = document.getElementById('ir-a-registro');
-    const irARecuperarBtn = document.getElementById('ir-a-recuperar');
 
     // Función para abrir el modal con animación
-    const abrirLoginModal = () => {
-      if (loginModal) {
-        loginModal.classList.remove('hidden');
+    const abrirRegistroModal = () => {
+      if (registroModal) {
+        registroModal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
 
         // Aplicar animación de entrada
         setTimeout(() => {
-          const modalContent = loginModal.querySelector('.transform');
+          const modalContent = registroModal.querySelector('.transform');
           if (modalContent) {
             modalContent.classList.remove('scale-95', 'opacity-0');
             modalContent.classList.add('scale-100', 'opacity-100');
@@ -128,85 +167,72 @@
     };
 
     // Función para cerrar el modal con animación
-    const cerrarLoginModal = () => {
-      if (loginModal) {
-        const modalContent = loginModal.querySelector('.transform');
+    const cerrarRegistroModal = () => {
+      if (registroModal) {
+        const modalContent = registroModal.querySelector('.transform');
         if (modalContent) {
           modalContent.classList.remove('scale-100', 'opacity-100');
           modalContent.classList.add('scale-95', 'opacity-0');
 
           // Esperar a que termine la animación antes de ocultar
           setTimeout(() => {
-            loginModal.classList.add('hidden');
+            registroModal.classList.add('hidden');
             document.body.style.overflow = '';
           }, 300);
         } else {
-          loginModal.classList.add('hidden');
+          registroModal.classList.add('hidden');
           document.body.style.overflow = '';
         }
       }
     };
 
-    // Abrir modal al hacer clic en el botón de inicio de sesión
-    if (loginButton) {
-      loginButton.addEventListener('click', (e) => {
+    // Abrir modal al hacer clic en el botón de registro
+    if (registroButton) {
+      registroButton.addEventListener('click', (e) => {
         e.preventDefault();
-        abrirLoginModal();
+        abrirRegistroModal();
       });
     }
 
     // Cerrar modal al hacer clic en el botón de cerrar
-    if (closeModal) {
-      closeModal.addEventListener('click', cerrarLoginModal);
+    if (closeRegistroModal) {
+      closeRegistroModal.addEventListener('click', cerrarRegistroModal);
     }
 
     // Cerrar modal al hacer clic en el overlay
-    if (modalOverlay) {
-      modalOverlay.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) {
-          cerrarLoginModal();
+    if (registroModalOverlay) {
+      registroModalOverlay.addEventListener('click', (e) => {
+        if (e.target === registroModalOverlay) {
+          cerrarRegistroModal();
         }
       });
     }
 
     // Cerrar modal al presionar ESC
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && loginModal && !loginModal.classList.contains('hidden')) {
-        cerrarLoginModal();
+      if (e.key === 'Escape' && registroModal && !registroModal.classList.contains('hidden')) {
+        cerrarRegistroModal();
       }
     });
 
-    // Switch de login a registro
-    if (irARegistroBtn) {
-      irARegistroBtn.addEventListener('click', (e) => {
+    // Switch de registro a login
+    if (irALoginBtn) {
+      irALoginBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        cerrarLoginModal();
+        cerrarRegistroModal();
 
-        // Esperar a que termine la animación de cierre antes de abrir el registro
+        // Esperar a que termine la animación de cierre antes de abrir el login
         setTimeout(() => {
-          // Disparar evento personalizado para abrir el modal de registro
-          const abrirRegistroEvent = new Event('abrir-registro-modal');
-          document.dispatchEvent(abrirRegistroEvent);
-        }, 300);
-      });
-    }
-
-    // Switch de login a recuperar contraseña
-    if (irARecuperarBtn) {
-      irARecuperarBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        cerrarLoginModal();
-
-        // Esperar a que termine la animación de cierre antes de abrir recuperación
-        setTimeout(() => {
-          // Disparar evento personalizado para abrir el modal de recuperación
-          const abrirRecuperarEvent = new Event('abrir-recuperar-modal');
-          document.dispatchEvent(abrirRecuperarEvent);
+          if (loginModal) {
+            // Disparar evento personalizado para abrir el modal de login
+            const abrirLoginEvent = new Event('abrir-login-modal');
+            document.dispatchEvent(abrirLoginEvent);
+          }
         }, 300);
       });
     }
 
     // Escuchar evento para abrir este modal desde otros componentes
-    document.addEventListener('abrir-login-modal', abrirLoginModal);
+    document.addEventListener('abrir-registro-modal', abrirRegistroModal);
   });
 </script>
