@@ -1,13 +1,6 @@
 ---
 // src/components/libros/BookCard.astro
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  cover: string;
-  price: string;
-  category: string;
-}
+import type { Book } from '../../types/Books';
 
 const { book } = Astro.props;
 ---

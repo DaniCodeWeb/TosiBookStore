@@ -5,21 +5,33 @@ import path from 'path';
 
 // https://astro.build/config
 export default defineConfig({
+  // Configura tu URL del sitio - IMPORTANTE para SEO y URLs absolutas
+  site: 'http://localhost:3000', // Cambia esto por tu dominio real
+
   build: {
-    format: 'file'
+    format: 'file',
+    // Optimizaciones adicionales para SEO
+    inlineStylesheets: 'auto',
   },
+
   markdown: {
     shikiConfig: {
       theme: 'dark-plus'
     }
   },
+
   integrations: [
     mdx(),
     tailwind()
   ],
+
   // Se elimina srcDir para usar la ruta estándar ./src
   cacheDir: './dist/pages',
   outDir: './dist/pages',
+
+  // Configuración adicional para SEO
+  compressHTML: true,
+
   vite: {
     resolve: {
       alias: {
@@ -33,6 +45,22 @@ export default defineConfig({
     server: {
       watch: {
         ignored: ['!**/dist/**'],
+      },
+      // Puerto personalizado (opcional)
+      port: 3000,
+      host: true
+    },
+    build: {
+      // Optimizaciones para producción
+      cssMinify: true,
+      minify: 'terser',
+      rollupOptions: {
+        output: {
+          // Organizar archivos de build para mejor cache
+          assetFileNames: 'assets/[name]-[hash][extname]',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js'
+        }
       }
     }
   }

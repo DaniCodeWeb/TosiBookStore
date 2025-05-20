@@ -6,6 +6,234 @@ import InicioSesion from '../../pages/auth/login/InicioSesion.astro';
 interface Props {
   title: string;
   description?: string;
+  keywords?: string;
+  ogImage?: string;
+  ogType?: string;
+  canonicalUrl?: string;
+  hasAOS?: boolean;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = "Tu librería online con las mejores novedades literarias. Descubre libros de ciencia ficción, romance, misterio y más géneros literarios.",
+  keywords = "librería online, libros, novedades literarias, ciencia ficción, romance, misterio, comprar libros",
+  ogImage = "/images/og-image-default.jpg",
+  ogType = "website",
+  canonicalUrl,
+  hasAOS = true,
+  noIndex = false
+} = Astro.props;
+
+// Generar URL canónica de manera segura
+let currentUrl: string;
+try {
+  if (canonicalUrl) {
+    currentUrl = canonicalUrl;
+  } else if (Astro.site) {
+    currentUrl = new URL(Astro.url.pathname, Astro.site).toString();
+  } else {
+    // Fallback para desarrollo sin site configurado
+    currentUrl = `http://localhost:3000${Astro.url.pathname}`;
+  }
+} catch (error) {
+  console.warn('Error creando URL canónica:', error);
+  currentUrl = Astro.url.pathname;
+}
+
+// Título optimizado para SEO (máximo 60 caracteres recomendados)
+const fullTitle = title === "Inicio"
+  ? "TOSIBOOKSTORE - Tu Librería Online de Confianza"
+  : `${title} | TOSIBOOKSTORE`;
+
+// Verificar longitud del título
+if (fullTitle.length > 60) {
+  console.warn(`Título SEO muy largo: ${fullTitle.length} caracteres. Considera acortarlo.`);
+}
+
+// Función helper para generar URLs seguras
+const createSafeUrl = (path: string): string => {
+  try {
+    if (Astro.site) {
+      return new URL(path, Astro.site).toString();
+    } else {
+      // Fallback para desarrollo
+      return `http://localhost:3000${path.startsWith('/') ? path : '/' + path}`;
+    }
+  } catch (error) {
+    console.warn('Error creando URL:', error);
+    return path;
+  }
+};
+
+// Verificar longitud del título
+if (fullTitle.length > 60) {
+  console.warn(`Título SEO muy largo: ${fullTitle.length} caracteres. Considera acortarlo.`);
+}
+
+// Verificar longitud de descripción
+if (description.length > 160) {
+  console.warn(`Descripción SEO muy larga: ${description.length} caracteres. Considera acortarla.`);
+}
+---
+
+<!DOCTYPE html>
+<html lang="es" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Permissions Policy para evitar warnings de Chrome -->
+    <meta http-equiv="Permissions-Policy" content="attribution-reporting=(), browsing-topics=()" />
+
+    <!-- Favicon y iconos -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- SEO Básico -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+
+    <!-- Robots -->
+    {noIndex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
+
+    <!-- URL Canónica -->
+    <link rel="canonical" href={currentUrl} />
+
+    <!-- Open Graph (Facebook) -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={createSafeUrl(ogImage)} />
+    <meta property="og:url" content={currentUrl} />
+    <meta property="og:site_name" content="TOSIBOOKSTORE" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={createSafeUrl(ogImage)} />
+
+    <!-- Información adicional del sitio -->
+    <meta name="author" content="TOSIBOOKSTORE" />
+    <meta name="copyright" content="© 2025 TOSIBOOKSTORE" />
+    <meta name="language" content="es" />
+
+    <!-- Preconnect para mejorar rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fuentes optimizadas -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Solo preload si tienes la fuente localmente -->
+    <!-- <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin /> -->
+
+    <!-- Schema.org estructurado para librerías -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BookStore",
+        "name": "TOSIBOOKSTORE",
+        "description": "Tu librería online con las mejores novedades literarias",
+        "url": "https://tosibookstore.com",
+        "logo": "https://tosibookstore.com/logo.png",
+        "sameAs": [
+          "https://www.facebook.com/tosibookstore",
+          "https://www.instagram.com/tosibookstore",
+          "https://twitter.com/tosibookstore"
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "ES"
+        },
+        "openingHours": "Mo-Su 00:00-23:59",
+        "paymentAccepted": ["Cash", "Credit Card", "PayPal"],
+        "priceRange": "€"
+      }
+    </script>
+
+    <!-- Google Analytics / Tag Manager (opcional) -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    -->
+  </head>
+  <body class="min-h-screen flex flex-col overflow-x-hidden">
+    <Navbar />
+    <main class="flex-grow pt-20 overflow-x-hidden w-full">
+      <div class="overflow-x-hidden w-full">
+        <slot />
+      </div>
+    </main>
+    <Footer />
+    <InicioSesion
+      data-aos="fade-down"
+      data-aos-duration="800"
+      data-aos-easing="ease-in-out-back"
+    />
+
+    {hasAOS && (
+      <script>
+        import { initializeAnimations } from '../../scripts/animations.js';
+        // Este script se ejecutará en el cliente
+        document.addEventListener('DOMContentLoaded', initializeAnimations);
+      </script>
+    )}
+
+    <!-- Script para mejorar el SEO dinámico basado en el navbar.js -->
+    <script is:inline>
+      // Configuración de meta tags por sección para SPA behavior
+      // @ts-ignore
+      window.sectionMeta = {
+        'inicio': {
+          title: 'TOSIBOOKSTORE - Tu Librería Online de Confianza',
+          description: 'Descubre las mejores novedades literarias en nuestra librería online. Ciencia ficción, romance, misterio y más géneros.',
+          keywords: 'librería online, libros, novedades literarias, inicio'
+        },
+        'catalogo': {
+          title: 'Catálogo de Libros | TOSIBOOKSTORE',
+          description: 'Explora nuestro amplio catálogo de libros organizados por géneros. Encuentra tu próxima lectura favorita.',
+          keywords: 'catálogo libros, géneros literarios, ciencia ficción, romance, misterio'
+        },
+        'sobre-nosotros': {
+          title: 'Sobre Nosotros | TOSIBOOKSTORE',
+          description: 'Conoce la historia de TOSIBOOKSTORE, tu librería online de confianza especializada en novedades literarias.',
+          keywords: 'sobre nosotros, historia librería, equipo tosibookstore'
+        },
+        'contacto': {
+          title: 'Contacto | TOSIBOOKSTORE',
+          description: 'Ponte en contacto con TOSIBOOKSTORE. Estamos aquí para ayudarte con tus consultas sobre libros y pedidos.',
+          keywords: 'contacto, atención cliente, consultas libros'
+        }
+      };
+    </script>
+  </body>
+</html>
+
+<!-- ---
+import Navbar from '../../components/lading/Navbar.astro';
+import Footer from '../../components/lading/Footer.astro';
+import InicioSesion from '../../pages/auth/login/InicioSesion.astro';
+
+interface Props {
+  title: string;
+  description?: string;
   hasAOS?: boolean;
 }
 
@@ -123,4 +351,4 @@ const {
       </>
     )}
   </body>
-</html>
+</html> -->

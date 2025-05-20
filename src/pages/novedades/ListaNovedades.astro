@@ -1,62 +1,41 @@
 ---
 import BookListLayout from '../../layouts/BookListLayout.astro';
 
-// Datos de la categoría (rutas de imágenes corregidas)
 const category = {
   name: "Novedades",
   slug: "novedades",
   description: "Descubre los mejores cómics de Marvel, DC y más"
 };
 
-// Datos de libros con más ejemplos y rutas corregidas
+// Datos de libros actualizados con todas las propiedades requeridas
 const books = [
   {
+    id: "1", // Añade ID único
     title: "Spiderman: No Way Home",
     author: "Marvel Comics",
     cover: "/assets/img/landing/Poesia.png",
-    price: "180 bs"
+    price: "180 bs",
+    category: "novedades", // Añade categoría
+    description: "La última aventura de Spiderman en el multiverso" // Descripción opcional
   },
   {
+    id: "2",
     title: "Batman: The Dark Knight Returns",
     author: "Frank Miller",
     cover: "/assets/img/landing/Poesia.png",
-    price: "200 bs"
+    price: "200 bs",
+    category: "novedades",
+    description: "El regreso de Batman en esta icónica historia"
   },
+  // ... completa igual para los demás libros
   {
-    title: "Watchmen",
-    author: "Alan Moore",
-    cover: "/assets/img/landing/Poesia.png",
-    price: "220 bs"
-  },
-  {
-    title: "V de Vendetta",
-    author: "Alan Moore",
-    cover: "/assets/img/landing/Poesia.png",
-    price: "190 bs"
-  },
-  {
-    title: "Sandman",
-    author: "Neil Gaiman",
-    cover: "/assets/img/landing/Poesia.png",
-    price: "210 bs"
-  },
-  {
-    title: "Saga",
-    author: "Brian K. Vaughan",
-    cover: "/assets/img/landing/Poesia.png",
-    price: "175 bs"
-  },
-  {
-    title: "Maus",
-    author: "Art Spiegelman",
-    cover: "/assets/img/landing/Poesia.png",
-    price: "195 bs"
-  },
-  {
+    id: "8",
     title: "Persépolis",
     author: "Marjane Satrapi",
     cover: "/assets/img/landing/Poesia.png",
-    price: "185 bs"
+    price: "185 bs",
+    category: "novedades",
+    description: "Historia autobiográfica de la Revolución Iraní"
   }
 ];
 ---

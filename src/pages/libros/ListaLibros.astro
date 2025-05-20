@@ -1,8 +1,6 @@
 ---
-// Datos de la categoría (rutas de imágenes corregidas)
 // /pages/libros/ListaLibros.astro
 import BookListLayout from '../../layouts/BookListLayout.astro';
-import BookModal from '../../components/libros/BookModal.astro';
 
 const category = {
   name: "Libros Literarios",
@@ -10,55 +8,71 @@ const category = {
   description: "Nuestra colección de literatura clásica y contemporánea"
 };
 
-// Datos de libros con más ejemplos y rutas corregidas
+// Datos de libros actualizados con todas las propiedades requeridas
 const books = [
   {
+    id: "1",  // Añadido
     title: "Spiderman: No Way Home",
     author: "Marvel Comics",
     cover: "/src/assets/img/libros/llamame.webp",
-    price: "180 bs"
+    price: "180 bs",
+    category: "libros",  // Añadido
+    description: "Descripción del libro 1"  // Opcional pero recomendado
   },
   {
+    id: "2",
     title: "Batman: The Dark Knight Returns",
     author: "Frank Miller",
     cover: "/src/assets/img/libros/ojala.webp",
-    price: "200 bs"
+    price: "200 bs",
+    category: "libros",
+    description: "Descripción del libro 2"
   },
-  {
-    title: "Watchmen",
-    author: "Alan Moore",
-    cover: "/src/assets/img/libros/ojos.webp",
-    price: "220 bs"
+    {
+    id: "3",
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/src/assets/img/libros/ojala.webp",
+    price: "200 bs",
+    category: "libros",
+    description: "Descripción del libro 2"
   },
-  {
-    title: "V de Vendetta",
-    author: "Alan Moore",
-    cover: "/src/assets/img/libros/pizarn.webp",
-    price: "190 bs"
+    {
+    id: "4",
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/src/assets/img/libros/ojala.webp",
+    price: "200 bs",
+    category: "libros",
+    description: "Descripción del libro 2"
   },
-  {
-    title: "Sandman",
-    author: "Neil Gaiman",
-    cover: "/src/assets/img/libros/caos.webp",
-    price: "210 bs"
+    {
+    id: "5",
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/src/assets/img/libros/ojala.webp",
+    price: "200 bs",
+    category: "libros",
+    description: "Descripción del libro 2"
   },
-  {
-    title: "Saga",
-    author: "Brian K. Vaughan",
-    cover: "/src/assets/img/libros/pizarn2.webp",
-    price: "175 bs"
+    {
+    id: "6",
+    title: "Batman: The Dark Knight Returns",
+    author: "Frank Miller",
+    cover: "/src/assets/img/libros/ojala.webp",
+    price: "200 bs",
+    category: "libros",
+    description: "Descripción del libro 2"
   },
+  // ... añade el resto de libros con las mismas propiedades
   {
-    title: "Maus",
-    author: "Art Spiegelman",
-    cover: "/src/assets/img/libros/image-33-_1_.webp",
-    price: "195 bs"
-  },
-  {
+    id: "8",
     title: "Persépolis",
     author: "Marjane Satrapi",
     cover: "/assets/img/landing/Poesia.png",
-    price: "185 bs"
+    price: "185 bs",
+    category: "libros",
+    description: "Descripción del libro 8"
   }
 ];
 ---
