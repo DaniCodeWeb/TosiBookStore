@@ -9,8 +9,6 @@ const title = "Panel de control";
 const path = "../../dist";
 const mainPage = "dashboard";
 const page = "index";
-
-
 ---
 
 <!doctype html>
@@ -71,7 +69,7 @@ const page = "index";
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row-->
+            <!--begin::Row - Info Boxes-->
             <div class="row">
               <!--begin::Col-->
               <div class="col-lg-3 col-6">
@@ -79,7 +77,6 @@ const page = "index";
                 <div class="small-box text-bg-primary">
                   <div class="inner">
                     <h3>150</h3>
-
                     <p>Nuevas ordenes</p>
                   </div>
                   <svg
@@ -108,7 +105,6 @@ const page = "index";
                 <div class="small-box text-bg-success">
                   <div class="inner">
                     <h3>53<sup class="fs-5">%</sup></h3>
-
                     <p>Visitas por mes</p>
                   </div>
                   <svg
@@ -137,7 +133,6 @@ const page = "index";
                 <div class="small-box text-bg-warning">
                   <div class="inner">
                     <h3>44</h3>
-
                     <p>Nuevos Usuarios</p>
                   </div>
                   <svg
@@ -166,7 +161,6 @@ const page = "index";
                 <div class="small-box text-bg-danger">
                   <div class="inner">
                     <h3>65</h3>
-
                     <p>ganancias por mes</p>
                   </div>
                   <svg
@@ -198,29 +192,44 @@ const page = "index";
               </div>
               <!--end::Col-->
             </div>
-            <!--end::Row-->
-            <!--begin::Row-->
+            <!--end::Row - Info Boxes-->
+
+            <!--begin::Row - Main Content-->
             <div class="row">
-              <!-- Start col -->
-              <div class="col-lg-7 connectedSortable">
+              <!-- Begin Left Column - 8/12 width -->
+              <div class="col-lg-8 connectedSortable">
+                <!-- Sales Chart Card -->
                 <div class="card mb-4">
                   <div class="card-header">
-                    <h3 class="card-title">Ventas por Mes</h3>
+                    <h3 class="card-title">Ventas y Compras por Mes</h3>
+                    <div class="card-tools">
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-lte-toggle="card-collapse"
+                      >
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-lte-toggle="card-remove"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
                   </div>
-
                   <div class="card-body">
                     <div id="revenue-chart"></div>
                   </div>
                 </div>
+                <!-- End Sales Chart Card -->
 
-
-                <!-- /.card -->
-
-                <!-- DIRECT CHAT -->
+                <!-- Comments Card -->
                 <div class="card direct-chat direct-chat-primary mb-4">
                   <div class="card-header">
                     <h3 class="card-title">Comentarios</h3>
-
                     <div class="card-tools">
                       <span
                         title="3 New Messages"
@@ -267,19 +276,15 @@ const page = "index";
                             23 Jan 2:00 pm
                           </span>
                         </div>
-                        <!-- /.direct-chat-infos -->
                         <img
                           class="direct-chat-img"
                           src={path + "/assets/img/user1-128x128.jpg"}
                           alt="message user image"
                         />
-                        <!-- /.direct-chat-img -->
                         <div class="direct-chat-text">
                           Muy buena pagina para encontrar tus libros la recomiendo
                         </div>
-                        <!-- /.direct-chat-text -->
                       </div>
-                      <!-- /.direct-chat-msg -->
 
                       <!-- Message to the end -->
                       <div class="direct-chat-msg end">
@@ -291,19 +296,15 @@ const page = "index";
                             23 Jan 2:05 pm
                           </span>
                         </div>
-                        <!-- /.direct-chat-infos -->
                         <img
                           class="direct-chat-img"
                           src={path + "/assets/img/user3-128x128.jpg"}
                           alt="message user image"
                         />
-                        <!-- /.direct-chat-img -->
                         <div class="direct-chat-text">
-                          Si  puedes conseguir desde poesia hasta comics
+                          Si puedes conseguir desde poesia hasta comics
                         </div>
-                        <!-- /.direct-chat-text -->
                       </div>
-                      <!-- /.direct-chat-msg -->
 
                       <!-- Message. Default to the start -->
                       <div class="direct-chat-msg">
@@ -315,23 +316,15 @@ const page = "index";
                             23 Jan 5:37 pm
                           </span>
                         </div>
-                        <!-- /.direct-chat-infos -->
                         <img
                           class="direct-chat-img"
                           src={path + "/assets/img/user1-128x128.jpg"}
                           alt="message user image"
                         />
-                        <!-- /.direct-chat-img -->
                         <div class="direct-chat-text">
                           Me encanta la pagina es muy dinamica
                         </div>
-                        <!-- /.direct-chat-text -->
                       </div>
-                      <!-- /.direct-chat-msg -->
-
-                      <!-- Message to the end -->
-
-                      <!-- /.direct-chat-msg -->
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -352,147 +345,11 @@ const page = "index";
                       </div>
                     </form>
                   </div>
-                  <!-- /.card-footer-->
                 </div>
-                <!-- /.direct-chat -->
+                <!-- End Comments Card -->
 
-              </div>
-              <!-- /.Start col -->
-              <!-- Start col -->
-              <div class="col-md-5">
-                <!-- Info Boxes Style 2 -->
-                <div class="info-box mb-3 text-bg-warning">
-                  <span class="info-box-icon">
-                    <i class="bi bi-tag-fill"></i>
-                  </span>
-
-                  <div class="info-box-content">
-                    <span class="info-box-text">Inventario Total</span>
-                    <span class="info-box-number">300</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-                <div class="info-box mb-3 text-bg-success">
-                  <span class="info-box-icon">
-                    <i class="bi bi-heart-fill"></i>
-                  </span>
-
-                  <div class="info-box-content">
-                    <span class="info-box-text">Publicaciones</span>
-                    <span class="info-box-number">92</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-                <div class="info-box mb-3 text-bg-danger">
-                  <span class="info-box-icon">
-                    <i class="bi bi-cloud-row-up"></i>
-                  </span>
-
-                  <div class="info-box-content">
-                    <span class="info-box-text">Ventas al mes</span>
-                    <span class="info-box-number">1181</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-                <div class="info-box mb-3 text-bg-info">
-                  <span class="info-box-icon">
-                    <i class="bi bi-chat-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Mensajes con clientes</span>
-                    <span class="info-box-number">121</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-              </div>
-              <!-- GRAFICA DE COMPRAS -->
-              <div class="col-lg-7 connectedSortable">
+                <!-- Product List Card -->
                 <div class="card mb-4">
-                  <div class="card-header">
-                    <h3 class="card-title">Compras por mes</h3>
-                  </div>
-
-                  <div class="card-body">
-                    <div id="revenue-chart"></div>
-                  </div>
-                </div>
-
-
-               <!-- TERMINA GRAFICA DE COMPRAS-->
-                <!-- /.info-box -->
-
-                <div class="card mb-5">
-                  <div class="card-header">
-                    <h3 class="card-title">Categorias disponibles</h3>
-
-                    <div class="card-tools">
-                      <button
-                        type="button"
-                        class="btn btn-tool"
-                        data-lte-toggle="card-collapse"
-                      >
-                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-tool"
-                        data-lte-toggle="card-remove"
-                      >
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <!-- /.card-header -->
-                  <div class="card-body">
-                    <!--begin::Row-->
-                    <div class="row">
-                      <div class="col-12">
-                        <div id="pie-chart"></div>
-                      </div>
-                      <!-- /.col -->
-                    </div>
-                    <!--end::Row-->
-                  </div>
-                  <!-- /.card-body -->
-                  <div class="card-footer p-0">
-                    <ul class="nav nav-pills flex-column">
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          Comics
-                          <span class="float-end text-danger">
-                            <i class="bi bi-arrow-down fs-7"></i>
-                             12%
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          Poesia
-                          <span class="float-end text-success">
-                            <i class="bi bi-arrow-up fs-7"></i> 4%
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a href="#" class="nav-link">
-                          Infantil
-                          <span class="float-end text-info">
-                            <i class="bi bi-arrow-left fs-7"></i> 0%
-                          </span>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- /.footer -->
-                </div>
-                <!-- /.card -->
-
-                <!-- PRODUCT LIST -->
-                <div class="card">
                   <div class="card-header">
                     <h3 class="card-title">Productos recientemente añadidos</h3>
                     <div class="card-tools">
@@ -567,11 +424,118 @@ const page = "index";
                   </div>
                   <!-- /.card-footer -->
                 </div>
-                <!-- /.card -->
+                <!-- End Product List Card -->
               </div>
-              <!-- /.Start col -->
+              <!-- End Left Column -->
+
+              <!-- Begin Right Column - 4/12 width -->
+              <div class="col-lg-4">
+                <!-- Info Boxes Style 2 -->
+                <div class="info-box mb-3 text-bg-warning">
+                  <span class="info-box-icon">
+                    <i class="bi bi-tag-fill"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Inventario Total</span>
+                    <span class="info-box-number">300</span>
+                  </div>
+                </div>
+
+                <div class="info-box mb-3 text-bg-success">
+                  <span class="info-box-icon">
+                    <i class="bi bi-heart-fill"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Publicaciones</span>
+                    <span class="info-box-number">92</span>
+                  </div>
+                </div>
+
+                <div class="info-box mb-3 text-bg-danger">
+                  <span class="info-box-icon">
+                    <i class="bi bi-cloud-row-up"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Ventas al mes</span>
+                    <span class="info-box-number">1181</span>
+                  </div>
+                </div>
+
+                <div class="info-box mb-3 text-bg-info">
+                  <span class="info-box-icon">
+                    <i class="bi bi-chat-fill"></i>
+                  </span>
+                  <div class="info-box-content">
+                    <span class="info-box-text">Mensajes con clientes</span>
+                    <span class="info-box-number">121</span>
+                  </div>
+                </div>
+                <!-- End Info Boxes -->
+
+                <!-- Categories Card with Pie Chart -->
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h3 class="card-title">Categorias disponibles</h3>
+                    <div class="card-tools">
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-lte-toggle="card-collapse"
+                      >
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-lte-toggle="card-remove"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12">
+                        <div id="pie-chart"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer p-0">
+                    <ul class="nav nav-pills flex-column">
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
+                          Comics
+                          <span class="float-end text-danger">
+                            <i class="bi bi-arrow-down fs-7"></i>
+                             12%
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
+                          Poesia
+                          <span class="float-end text-success">
+                            <i class="bi bi-arrow-up fs-7"></i> 4%
+                          </span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
+                          Infantil
+                          <span class="float-end text-info">
+                            <i class="bi bi-arrow-left fs-7"></i> 0%
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <!-- End Categories Card -->
+              </div>
+              <!-- End Right Column -->
             </div>
-            <!-- /.row (main row) -->
+            <!--end::Row - Main Content-->
           </div>
           <!--end::Container-->
         </div>
@@ -642,7 +606,8 @@ const page = "index";
           },
         },
         legend: {
-          show: false,
+          show: true,
+          position: 'top',
         },
         colors: ["#0d6efd", "#20c997"],
         dataLabels: {
@@ -675,9 +640,34 @@ const page = "index";
         sales_chart_options,
       );
       sales_chart.render();
-    </script>
 
-    <!-- jsvectormap -->
-    <!--end::Script-->
+      // Pie chart for categories
+      const pie_chart_options = {
+        series: [44, 55, 13],
+        chart: {
+          type: 'pie',
+          height: 250,
+        },
+        labels: ['Comics', 'Poesia', 'Infantil'],
+        colors: ['#dc3545', '#198754', '#0dcaf0'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+      };
+
+      const pie_chart = new ApexCharts(
+        document.querySelector("#pie-chart"),
+        pie_chart_options
+      );
+      pie_chart.render();
+    </script>
   </body><!--end::Body-->
 </html>

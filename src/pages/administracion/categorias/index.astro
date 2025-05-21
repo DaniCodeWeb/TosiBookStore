@@ -1,0 +1,1135 @@
+---
+import Head from "../../../components/admin/_head.astro"
+import Footer from "../../../components/admin/dashboard/_footer.astro";
+import Topbar from "../../../components/admin/dashboard/_topbar.astro";
+import Sidenav from "../../../components/admin/dashboard/_sidenav.astro";
+import Scripts from "../../../components/admin/_scripts.astro";
+
+const title = "Gestión de Categoria";
+const path = "../../../dist";
+const mainPage = "categoria";
+const page = "lista";
+
+// Simulated catalog data - in a real app, you would fetch this from an API or database
+const catalogItems = [
+  {
+    id: 1,
+    name: "Catálogo Verano 2025",
+    description: "Productos destacados para la temporada de verano",
+    status: "Publicado",
+    pages: 12,
+    createdAt: "2025-04-15",
+    updatedAt: "2025-05-10"
+  },
+  {
+    id: 2,
+    name: "Ofertas Especiales Mayo",
+    description: "Descuentos y promociones del mes",
+    status: "Publicado",
+    pages: 8,
+    createdAt: "2025-05-01",
+    updatedAt: "2025-05-15"
+  },
+  {
+    id: 3,
+    name: "Novedades Tecnología",
+    description: "Los últimos lanzamientos en tecnología",
+    status: "Borrador",
+    pages: 15,
+    createdAt: "2025-05-12",
+    updatedAt: "2025-05-17"
+  },
+  {
+    id: 4,
+    name: "Colección Hogar 2025",
+    description: "Artículos destacados para el hogar",
+    status: "Publicado",
+    pages: 20,
+    createdAt: "2025-03-20",
+    updatedAt: "2025-04-30"
+  },
+  {
+    id: 5,
+    name: "Próximos Lanzamientos",
+    description: "Vista previa de productos por lanzar",
+    status: "Borrador",
+    pages: 6,
+    createdAt: "2025-05-18",
+    updatedAt: "2025-05-19"
+  }
+];
+
+// Filter options
+const statuses = ["Publicado", "Borrador", "Archivado"];
+---
+
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Gestión de Categoria</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Categoria</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Lista de catálogos
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+
+            <!-- Filtros y Botón Crear -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Búsqueda -->
+                  <div class="col-md-5 mb-3">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buscar catálogo..." aria-label="Buscar catálogo">
+                      <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-4 mb-3">
+                    <select class="form-select" aria-label="Filtrar por estado">
+                      <option selected>Todos los estados</option>
+                      {statuses.map(status => (
+                        <option value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Botón Aplicar Filtros -->
+                  <div class="col-md-3 mb-3">
+                    <button type="button" class="btn btn-outline-primary w-100">
+                      Aplicar Filtros
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCatalogModal">
+                  <i class="bi bi-plus-circle-fill me-1"></i> Crear Catálogo
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabla de Catálogos -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lista de Catálogos</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Descripción</th>
+                      <th>Estado</th>
+                      <th>Páginas</th>
+                      <th>Creado</th>
+                      <th>Actualizado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {catalogItems.map(item => (
+                      <tr>
+                        <td>{item.id}</td>
+                        <td>{item.name}</td>
+                        <td>{item.description}</td>
+                        <td>
+                          <span class={`badge ${
+                            item.status === "Publicado" ? "text-bg-success" :
+                            item.status === "Borrador" ? "text-bg-warning" :
+                            "text-bg-secondary"
+                          }`}>
+                            {item.status}
+                          </span>
+                        </td>
+                        <td>{item.pages}</td>
+                        <td>{item.createdAt}</td>
+                        <td>{item.updatedAt}</td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewCatalogModal">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-primary" title="Editar páginas">
+                              <i class="bi bi-journal-text"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editCatalogModal">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCatalogModal">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal Crear Catálogo -->
+      <div class="modal fade" id="createCatalogModal" tabindex="-1" aria-labelledby="createCatalogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createCatalogModalLabel">Crear Nuevo Catálogo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="catalogName" class="form-label">Nombre del Catálogo</label>
+                    <input type="text" class="form-control" id="catalogName" placeholder="Ingrese nombre del catálogo">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="catalogDescription" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="catalogDescription" rows="3" placeholder="Descripción breve del catálogo"></textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="catalogStatus" class="form-label">Estado</label>
+                    <select class="form-select" id="catalogStatus">
+                      {statuses.map(status => (
+                        <option value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="catalogPages" class="form-label">Número de Páginas</label>
+                    <input type="number" class="form-control" id="catalogPages" min="1" value="1">
+                  </div>
+                </div>
+
+                <!-- Sección para subir imagen de fondo -->
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="catalogBackground" class="form-label">Imagen de Fondo</label>
+                    <div class="input-group mb-2">
+                      <input type="file" class="form-control" id="catalogBackground" accept="image/*">
+                      <label class="input-group-text" for="catalogBackground">Subir</label>
+                    </div>
+                    <div class="bg-light p-2 text-center image-preview-container" style="min-height: 150px; border: 1px dashed #ccc;">
+                      <div id="imagePreview" class="d-flex align-items-center justify-content-center h-100">
+                        <p class="text-muted mb-0">Vista previa de la imagen</p>
+                      </div>
+                    </div>
+                    <small class="form-text text-muted">Tamaño recomendado: 1200x800px. Formato: JPG, PNG</small>
+                  </div>
+                </div>
+
+                <!-- Opciones avanzadas con acordeón -->
+                <div class="accordion mt-3 mb-3" id="catalogOptionsAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOptions">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptions" aria-expanded="false" aria-controls="collapseOptions">
+                        Opciones Avanzadas
+                      </button>
+                    </h2>
+                    <div id="collapseOptions" class="accordion-collapse collapse" aria-labelledby="headingOptions" data-bs-parent="#catalogOptionsAccordion">
+                      <div class="accordion-body">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="enableComments">
+                              <label class="form-check-label" for="enableComments">
+                                Permitir comentarios
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="enableSharing">
+                              <label class="form-check-label" for="enableSharing">
+                                Habilitar compartir en redes sociales
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="catalogType" class="form-label">Tipo de Visualización</label>
+                            <select class="form-select" id="catalogType">
+                              <option value="flipbook">Libro Digital (Flip)</option>
+                              <option value="slideshow">Presentación (Slide)</option>
+                              <option value="scroll">Desplazamiento Vertical</option>
+                            </select>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="catalogAccess" class="form-label">Acceso</label>
+                            <select class="form-select" id="catalogAccess">
+                              <option value="public">Público</option>
+                              <option value="registered">Solo Usuarios Registrados</option>
+                              <option value="private">Privado (Con Contraseña)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Guardar y Continuar a Páginas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Ver Catálogo -->
+      <div class="modal fade" id="viewCatalogModal" tabindex="-1" aria-labelledby="viewCatalogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewCatalogModalLabel">Detalles del Catálogo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <img src={path + "/assets/img/catalog-cover.jpg"} alt="Portada del Catálogo" class="img-fluid rounded">
+                </div>
+                <div class="col-md-8">
+                  <h4>Catálogo Verano 2025</h4>
+                  <span class="badge text-bg-success mb-2">Publicado</span>
+
+                  <p class="text-muted">Productos destacados para la temporada de verano</p>
+
+                  <div class="row mt-3">
+                    <div class="col-md-6">
+                      <p><strong>ID:</strong> 1</p>
+                      <p><strong>Páginas:</strong> 12</p>
+                      <p><strong>Fecha de creación:</strong> 2025-04-15</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p><strong>Última actualización:</strong> 2025-05-10</p>
+                      <p><strong>Tipo:</strong> Libro Digital (Flip)</p>
+                      <p><strong>Acceso:</strong> Público</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    <h5>Estadísticas</h5>
+                    <div class="row">
+                      <div class="col-md-4 mb-2">
+                        <div class="card bg-light">
+                          <div class="card-body p-2 text-center">
+                            <h6>Vistas</h6>
+                            <span class="h4">1,245</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <div class="card bg-light">
+                          <div class="card-body p-2 text-center">
+                            <h6>Compartidos</h6>
+                            <span class="h4">87</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-2">
+                        <div class="card bg-light">
+                          <div class="card-body p-2 text-center">
+                            <h6>Comentarios</h6>
+                            <span class="h4">23</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary">Ver Catálogo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar Catálogo -->
+      <div class="modal fade" id="editCatalogModal" tabindex="-1" aria-labelledby="editCatalogModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editCatalogModalLabel">Editar Catálogo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="editCatalogName" class="form-label">Nombre del Catálogo</label>
+                    <input type="text" class="form-control" id="editCatalogName" value="Catálogo Verano 2025">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="editCatalogDescription" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="editCatalogDescription" rows="3">Productos destacados para la temporada de verano</textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="editCatalogStatus" class="form-label">Estado</label>
+                    <select class="form-select" id="editCatalogStatus">
+                      {statuses.map(status => (
+                        <option value={status} selected={status === "Publicado"}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="editCatalogPages" class="form-label">Número de Páginas</label>
+                    <input type="number" class="form-control" id="editCatalogPages" min="1" value="12">
+                  </div>
+                </div>
+
+                <!-- Sección para editar imagen de fondo -->
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                    <label for="editCatalogBackground" class="form-label">Imagen de Fondo</label>
+                    <div class="input-group mb-2">
+                      <input type="file" class="form-control" id="editCatalogBackground" accept="image/*">
+                      <label class="input-group-text" for="editCatalogBackground">Subir</label>
+                    </div>
+                    <div class="bg-light p-2 text-center image-preview-container" style="min-height: 150px; border: 1px dashed #ccc;">
+                      <div id="editImagePreview" class="d-flex align-items-center justify-content-center h-100">
+                        <img src={path + "/assets/img/catalog-cover.jpg"} alt="Imagen de fondo actual" class="img-fluid" style="max-height: 150px;">
+                      </div>
+                    </div>
+                    <small class="form-text text-muted">Tamaño recomendado: 1200x800px. Formato: JPG, PNG</small>
+                  </div>
+                </div>
+
+                <!-- Opciones avanzadas con acordeón -->
+                <div class="accordion mt-3 mb-3" id="editCatalogOptionsAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="editHeadingOptions">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#editCollapseOptions" aria-expanded="false" aria-controls="editCollapseOptions">
+                        Opciones Avanzadas
+                      </button>
+                    </h2>
+                    <div id="editCollapseOptions" class="accordion-collapse collapse" aria-labelledby="editHeadingOptions" data-bs-parent="#editCatalogOptionsAccordion">
+                      <div class="accordion-body">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="editEnableComments" checked>
+                              <label class="form-check-label" for="editEnableComments">
+                                Permitir comentarios
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="editEnableSharing" checked>
+                              <label class="form-check-label" for="editEnableSharing">
+                                Habilitar compartir en redes sociales
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="editCatalogType" class="form-label">Tipo de Visualización</label>
+                            <select class="form-select" id="editCatalogType">
+                              <option value="flipbook" selected>Libro Digital (Flip)</option>
+                              <option value="slideshow">Presentación (Slide)</option>
+                              <option value="scroll">Desplazamiento Vertical</option>
+                            </select>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="editCatalogAccess" class="form-label">Acceso</label>
+                            <select class="form-select" id="editCatalogAccess">
+                              <option value="public" selected>Público</option>
+                              <option value="registered">Solo Usuarios Registrados</option>
+                              <option value="private">Privado (Con Contraseña)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Eliminar Catálogo -->
+      <div class="modal fade" id="deleteCatalogModal" tabindex="-1" aria-labelledby="deleteCatalogModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deleteCatalogModalLabel">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro que desea eliminar el catálogo <strong>Catálogo Verano 2025</strong>?</p>
+              <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Esta acción no se puede deshacer y también eliminará todas las páginas asociadas.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+    <!--end::App Wrapper-->
+
+   <!-- Scripts -->
+<Scripts path={path} />
+
+<script>
+// Interfaces
+interface CatalogItem {
+  id: number;
+  name: string;
+  description: string;
+  status: string;
+  pages: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Estado global para los catálogos (simulando un almacén de datos)
+let catalogItems: CatalogItem[] = [
+  {
+    id: 1,
+    name: "Catálogo Verano 2025",
+    description: "Productos destacados para la temporada de verano",
+    status: "Publicado",
+    pages: 12,
+    createdAt: "2025-04-15",
+    updatedAt: "2025-05-10"
+  },
+  {
+    id: 2,
+    name: "Ofertas Especiales Mayo",
+    description: "Descuentos y promociones del mes",
+    status: "Publicado",
+    pages: 8,
+    createdAt: "2025-05-01",
+    updatedAt: "2025-05-15"
+  },
+  {
+    id: 3,
+    name: "Novedades Tecnología",
+    description: "Los últimos lanzamientos en tecnología",
+    status: "Borrador",
+    pages: 15,
+    createdAt: "2025-05-12",
+    updatedAt: "2025-05-17"
+  },
+  {
+    id: 4,
+    name: "Colección Hogar 2025",
+    description: "Artículos destacados para el hogar",
+    status: "Publicado",
+    pages: 20,
+    createdAt: "2025-03-20",
+    updatedAt: "2025-04-30"
+  },
+  {
+    id: 5,
+    name: "Próximos Lanzamientos",
+    description: "Vista previa de productos por lanzar",
+    status: "Borrador",
+    pages: 6,
+    createdAt: "2025-05-18",
+    updatedAt: "2025-05-19"
+  }
+];
+
+// Evento que se dispara cuando el DOM está completamente cargado
+document.addEventListener('DOMContentLoaded', () => {
+  initializeImagePreview();
+  initializeModals();
+  initializeFilters();
+  initializeCRUDOperations();
+});
+
+// Función para inicializar la previsualización de imágenes
+function initializeImagePreview(): void {
+  // Para la vista crear
+  const fileInput = document.getElementById('catalogBackground') as HTMLInputElement;
+  const imagePreview = document.getElementById('imagePreview');
+
+  if (fileInput && imagePreview) {
+    fileInput.addEventListener('change', (event) => {
+      displayImagePreview(event, imagePreview);
+    });
+  }
+
+  // Para la vista editar
+  const editFileInput = document.getElementById('editCatalogBackground') as HTMLInputElement;
+  const editImagePreview = document.getElementById('editImagePreview');
+
+  if (editFileInput && editImagePreview) {
+    editFileInput.addEventListener('change', (event) => {
+      displayImagePreview(event, editImagePreview);
+    });
+  }
+}
+
+// Función para mostrar la vista previa de la imagen
+function displayImagePreview(event: Event, previewElement: HTMLElement | null): void {
+  if (!previewElement) return;
+
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+
+  if (files && files.length > 0) {
+    const fileReader = new FileReader();
+
+    fileReader.onload = function(e) {
+      previewElement.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = e.target?.result as string;
+      img.classList.add('img-fluid');
+      img.style.maxHeight = '150px';
+      previewElement.appendChild(img);
+    };
+
+    fileReader.readAsDataURL(files[0]);
+  }
+}
+
+// Función para inicializar los modales
+function initializeModals(): void {
+  // Obtener todos los botones que abren el modal de ver
+  const viewButtons = document.querySelectorAll('[data-bs-target="#viewCatalogModal"]');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      const target = event.currentTarget as HTMLElement;
+      const row = target.closest('tr');
+      if (row) {
+        const id = parseInt(row.querySelector('td:first-child')?.textContent || '0');
+        populateViewModal(id);
+      }
+    });
+  });
+
+  // Obtener todos los botones que abren el modal de editar
+  const editButtons = document.querySelectorAll('[data-bs-target="#editCatalogModal"]');
+  editButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      const target = event.currentTarget as HTMLElement;
+      const row = target.closest('tr');
+      if (row) {
+        const id = parseInt(row.querySelector('td:first-child')?.textContent || '0');
+        populateEditModal(id);
+      }
+    });
+  });
+
+  // Obtener todos los botones que abren el modal de eliminar
+  const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteCatalogModal"]');
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      const target = event.currentTarget as HTMLElement;
+      const row = target.closest('tr');
+      if (row) {
+        const id = parseInt(row.querySelector('td:first-child')?.textContent || '0');
+        const name = row.querySelector('td:nth-child(2)')?.textContent || '';
+        populateDeleteModal(id, name);
+      }
+    });
+  });
+}
+
+// Función para poblar el modal de ver
+function populateViewModal(catalogId: number): void {
+  const catalog = catalogItems.find(item => item.id === catalogId);
+  if (!catalog) return;
+
+  const modal = document.getElementById('viewCatalogModal');
+  if (!modal) return;
+
+  const titleElement = modal.querySelector('.modal-title');
+  if (titleElement) {
+    titleElement.textContent = `Detalles del Catálogo: ${catalog.name}`;
+  }
+
+  const nameElement = modal.querySelector('.modal-body h4');
+  if (nameElement) {
+    nameElement.textContent = catalog.name;
+  }
+
+  const statusElement = modal.querySelector('.modal-body .badge');
+  if (statusElement) {
+    statusElement.textContent = catalog.status;
+    statusElement.className = `badge mb-2 ${
+      catalog.status === "Publicado" ? "text-bg-success" :
+      catalog.status === "Borrador" ? "text-bg-warning" :
+      "text-bg-secondary"
+    }`;
+  }
+
+  const descriptionElement = modal.querySelector('.modal-body .text-muted');
+  if (descriptionElement) {
+    descriptionElement.textContent = catalog.description;
+  }
+
+  // Actualizar los detalles del catálogo
+  const detailsElements = modal.querySelectorAll('.modal-body .row .col-md-6 p');
+  if (detailsElements.length >= 6) {
+    detailsElements[0].innerHTML = `<strong>ID:</strong> ${catalog.id}`;
+    detailsElements[1].innerHTML = `<strong>Páginas:</strong> ${catalog.pages}`;
+    detailsElements[2].innerHTML = `<strong>Fecha de creación:</strong> ${catalog.createdAt}`;
+    detailsElements[3].innerHTML = `<strong>Última actualización:</strong> ${catalog.updatedAt}`;
+    // Los elementos 4 y 5 son para tipo y acceso que pueden no estar en el modelo de datos
+  }
+}
+
+// Función para poblar el modal de editar
+function populateEditModal(catalogId: number): void {
+  const catalog = catalogItems.find(item => item.id === catalogId);
+  if (!catalog) return;
+
+  const modal = document.getElementById('editCatalogModal');
+  if (!modal) return;
+
+  // Establecer el título del modal
+  const titleElement = modal.querySelector('.modal-title');
+  if (titleElement) {
+    titleElement.textContent = `Editar Catálogo: ${catalog.name}`;
+  }
+
+  // Establecer los valores de los campos
+  const nameInput = document.getElementById('editCatalogName') as HTMLInputElement;
+  if (nameInput) {
+    nameInput.value = catalog.name;
+  }
+
+  const descriptionTextarea = document.getElementById('editCatalogDescription') as HTMLTextAreaElement;
+  if (descriptionTextarea) {
+    descriptionTextarea.value = catalog.description;
+  }
+
+  const statusSelect = document.getElementById('editCatalogStatus') as HTMLSelectElement;
+  if (statusSelect) {
+    for (let i = 0; i < statusSelect.options.length; i++) {
+      if (statusSelect.options[i].value === catalog.status) {
+        statusSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  const pagesInput = document.getElementById('editCatalogPages') as HTMLInputElement;
+  if (pagesInput) {
+    pagesInput.value = catalog.pages.toString();
+  }
+
+  // Guardar el ID del catálogo en un atributo data para usarlo en la actualización
+  modal.setAttribute('data-catalog-id', catalog.id.toString());
+}
+
+// Función para poblar el modal de eliminar
+function populateDeleteModal(catalogId: number, catalogName: string): void {
+  const modal = document.getElementById('deleteCatalogModal');
+  if (!modal) return;
+
+  const messageElement = modal.querySelector('.modal-body p strong');
+  if (messageElement) {
+    messageElement.textContent = catalogName;
+  }
+
+  // Guardar el ID del catálogo en un atributo data para usarlo en la eliminación
+  modal.setAttribute('data-catalog-id', catalogId.toString());
+}
+
+// Función para inicializar los filtros
+function initializeFilters(): void {
+  const searchInput = document.querySelector('.input-group input[type="text"]') as HTMLInputElement;
+  const statusSelect = document.querySelector('.form-select[aria-label="Filtrar por estado"]') as HTMLSelectElement;
+  const applyButton = document.querySelector('.btn-outline-primary') as HTMLButtonElement;
+
+  if (applyButton) {
+    applyButton.addEventListener('click', () => {
+      applyFilters(
+        searchInput?.value || '',
+        statusSelect?.value || 'Todos los estados'
+      );
+    });
+  }
+}
+
+// Función para aplicar los filtros
+function applyFilters(searchTerm: string, status: string): void {
+  // En una implementación real, esto podría ser una llamada a un API
+  // Aquí simplemente filtramos el array local
+  let filteredItems = [...catalogItems];
+
+  if (searchTerm) {
+    filteredItems = filteredItems.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  if (status !== 'Todos los estados') {
+    filteredItems = filteredItems.filter(item => item.status === status);
+  }
+
+  // Actualizar la tabla con los resultados filtrados
+  updateCatalogTable(filteredItems);
+}
+
+// Función para actualizar la tabla de catálogos
+function updateCatalogTable(items: CatalogItem[]): void {
+  const tableBody = document.querySelector('.table tbody');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = '';
+
+  items.forEach(item => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+      <td>${item.id}</td>
+      <td>${item.name}</td>
+      <td>${item.description}</td>
+      <td>
+        <span class="badge ${
+          item.status === "Publicado" ? "text-bg-success" :
+          item.status === "Borrador" ? "text-bg-warning" :
+          "text-bg-secondary"
+        }">
+          ${item.status}
+        </span>
+      </td>
+      <td>${item.pages}</td>
+      <td>${item.createdAt}</td>
+      <td>${item.updatedAt}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewCatalogModal">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-primary" title="Editar páginas">
+            <i class="bi bi-journal-text"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editCatalogModal">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCatalogModal">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+
+  // Reinicializar los event listeners para los botones de acción
+  initializeModals();
+}
+
+// Función para inicializar las operaciones CRUD
+function initializeCRUDOperations(): void {
+  // Manejar la creación de catálogo
+  const createForm = document.querySelector('#createCatalogModal form');
+  const createButton = document.querySelector('#createCatalogModal .modal-footer .btn-success');
+
+  if (createButton) {
+    createButton.addEventListener('click', () => {
+      createCatalog();
+    });
+  }
+
+  // Manejar la actualización de catálogo
+  const updateButton = document.querySelector('#editCatalogModal .modal-footer .btn-warning');
+
+  if (updateButton) {
+    updateButton.addEventListener('click', () => {
+      const modal = document.getElementById('editCatalogModal');
+      if (modal) {
+        const catalogId = parseInt(modal.getAttribute('data-catalog-id') || '0');
+        updateCatalog(catalogId);
+      }
+    });
+  }
+
+  // Manejar la eliminación de catálogo
+  const deleteButton = document.querySelector('#deleteCatalogModal .modal-footer .btn-danger');
+
+  if (deleteButton) {
+    deleteButton.addEventListener('click', () => {
+      const modal = document.getElementById('deleteCatalogModal');
+      if (modal) {
+        const catalogId = parseInt(modal.getAttribute('data-catalog-id') || '0');
+        deleteCatalog(catalogId);
+      }
+    });
+  }
+}
+
+// Función para crear un nuevo catálogo
+function createCatalog(): void {
+  const nameInput = document.getElementById('catalogName') as HTMLInputElement;
+  const descriptionTextarea = document.getElementById('catalogDescription') as HTMLTextAreaElement;
+  const statusSelect = document.getElementById('catalogStatus') as HTMLSelectElement;
+  const pagesInput = document.getElementById('catalogPages') as HTMLInputElement;
+
+  if (!nameInput || !descriptionTextarea || !statusSelect || !pagesInput) {
+    showNotification('Error: Faltan campos requeridos', 'danger');
+    return;
+  }
+
+  const name = nameInput.value.trim();
+  const description = descriptionTextarea.value.trim();
+  const status = statusSelect.value;
+  const pages = parseInt(pagesInput.value);
+
+  if (!name) {
+    showNotification('Error: El nombre del catálogo es obligatorio', 'danger');
+    return;
+  }
+
+  // Generar un nuevo ID (en una implementación real, esto vendría del backend)
+  const newId = Math.max(...catalogItems.map(item => item.id)) + 1;
+
+  // Crear el objeto de nuevo catálogo
+  const currentDate = new Date().toISOString().split('T')[0];
+  const newCatalog: CatalogItem = {
+    id: newId,
+    name,
+    description,
+    status,
+    pages,
+    createdAt: currentDate,
+    updatedAt: currentDate
+  };
+
+  // En una implementación real, esto sería una llamada a una API
+  catalogItems.push(newCatalog);
+
+  // Actualizar la tabla
+  updateCatalogTable(catalogItems);
+
+  // Cerrar el modal
+  const modal = document.getElementById('createCatalogModal');
+  if (modal) {
+    const bsModal = bootstrap.Modal.getInstance(modal);
+    if (bsModal) {
+      bsModal.hide();
+    }
+  }
+
+  // Limpiar el formulario
+  if (nameInput) nameInput.value = '';
+  if (descriptionTextarea) descriptionTextarea.value = '';
+  if (pagesInput) pagesInput.value = '1';
+
+  // Mostrar notificación
+  showNotification('Catálogo creado exitosamente', 'success');
+}
+
+// Función para actualizar un catálogo existente
+function updateCatalog(catalogId: number): void {
+  const nameInput = document.getElementById('editCatalogName') as HTMLInputElement;
+  const descriptionTextarea = document.getElementById('editCatalogDescription') as HTMLTextAreaElement;
+  const statusSelect = document.getElementById('editCatalogStatus') as HTMLSelectElement;
+  const pagesInput = document.getElementById('editCatalogPages') as HTMLInputElement;
+
+  if (!nameInput || !descriptionTextarea || !statusSelect || !pagesInput) {
+    showNotification('Error: Faltan campos requeridos', 'danger');
+    return;
+  }
+
+  const name = nameInput.value.trim();
+  const description = descriptionTextarea.value.trim();
+  const status = statusSelect.value;
+  const pages = parseInt(pagesInput.value);
+
+  if (!name) {
+    showNotification('Error: El nombre del catálogo es obligatorio', 'danger');
+    return;
+  }
+
+  // Buscar el catálogo a actualizar
+  const catalogIndex = catalogItems.findIndex(item => item.id === catalogId);
+  if (catalogIndex === -1) {
+    showNotification('Error: Catálogo no encontrado', 'danger');
+    return;
+  }
+
+  // En una implementación real, esto sería una llamada a una API
+  // Actualizar el catálogo
+  catalogItems[catalogIndex] = {
+    ...catalogItems[catalogIndex],
+    name,
+    description,
+    status,
+    pages,
+    updatedAt: new Date().toISOString().split('T')[0]
+  };
+
+  // Actualizar la tabla
+  updateCatalogTable(catalogItems);
+
+  // Cerrar el modal
+  const modal = document.getElementById('editCatalogModal');
+  if (modal) {
+    const bsModal = bootstrap.Modal.getInstance(modal);
+    if (bsModal) {
+      bsModal.hide();
+    }
+  }
+
+  // Mostrar notificación
+  showNotification('Catálogo actualizado exitosamente', 'success');
+}
+
+// Función para eliminar un catálogo
+function deleteCatalog(catalogId: number): void {
+  // En una implementación real, esto sería una llamada a una API
+  catalogItems = catalogItems.filter(item => item.id !== catalogId);
+
+  // Actualizar la tabla
+  updateCatalogTable(catalogItems);
+
+  // Cerrar el modal
+  const modal = document.getElementById('deleteCatalogModal');
+  if (modal) {
+    const bsModal = bootstrap.Modal.getInstance(modal);
+    if (bsModal) {
+      bsModal.hide();
+    }
+  }
+
+  // Mostrar notificación
+  showNotification('Catálogo eliminado exitosamente', 'success');
+}
+
+// Función para mostrar una notificación de tipo toast
+function showNotification(message: string, type: 'success' | 'danger' | 'warning' | 'info'): void {
+  // Crear elemento toast
+  const toastContainer = document.createElement('div');
+  toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+  toastContainer.style.zIndex = '5';
+
+  const toastElement = document.createElement('div');
+  toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
+  toastElement.setAttribute('role', 'alert');
+  toastElement.setAttribute('aria-live', 'assertive');
+  toastElement.setAttribute('aria-atomic', 'true');
+
+  const toastContent = document.createElement('div');
+  toastContent.className = 'd-flex';
+
+  const toastBody = document.createElement('div');
+  toastBody.className = 'toast-body';
+  toastBody.textContent = message;
+
+  const closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'btn-close btn-close-white me-2 m-auto';
+  closeButton.setAttribute('data-bs-dismiss', 'toast');
+  closeButton.setAttribute('aria-label', 'Close');
+
+  toastContent.appendChild(toastBody);
+  toastContent.appendChild(closeButton);
+  toastElement.appendChild(toastContent);
+  toastContainer.appendChild(toastElement);
+  document.body.appendChild(toastContainer);
+
+  // Inicializar y mostrar el toast
+  const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
+  toast.show();
+
+  // Eliminar el toast del DOM después de que se oculte
+  toastElement.addEventListener('hidden.bs.toast', () => {
+    document.body.removeChild(toastContainer);
+  });
+}
+
+// Declaración de bootstrap para TypeScript
+declare const bootstrap: {
+  Modal: {
+    getInstance(element: Element): {
+      hide(): void;
+      show(): void;
+    } | null;
+  };
+  Toast: {
+    new(element: Element, options?: { autohide?: boolean; delay?: number }): {
+      show(): void;
+      hide(): void;
+    };
+  };
+};
+</script>

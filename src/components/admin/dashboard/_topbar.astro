@@ -1,6 +1,34 @@
 ---
 const { path } = Astro.props;
 const distPath = path;
+
+// Simulación de datos para las notificaciones
+const notifications = {
+  sales: [
+    { id: 1, title: "Nueva venta", message: "Venta #1234 procesada correctamente", time: "hace 3 minutos", icon: "bi-cart-check-fill", type: "success" },
+    { id: 2, title: "Nueva venta", message: "Venta #1235 procesada correctamente", time: "hace 1 hora", icon: "bi-cart-check-fill", type: "success" }
+  ],
+  purchases: [
+    { id: 1, title: "Nueva compra", message: "Compra #567 registrada", time: "hace 30 minutos", icon: "bi-bag-check-fill", type: "info" }
+  ],
+  users: [
+    { id: 1, title: "Nuevo usuario", message: "Ana López se ha registrado", time: "hace 2 horas", icon: "bi-person-plus-fill", type: "primary" }
+  ]
+};
+
+// Datos del usuario
+const userData = {
+  name: "Diego",
+  role: "Administrador Tosibookstore",
+  memberSince: "Nov. 2023",
+  avatar: distPath + "/assets/img/user2-160x160.jpg",
+  salesCount: 245,
+  followers: 12,
+  friends: 8
+};
+
+// Contar notificaciones totales
+const totalNotifications = notifications.sales.length + notifications.purchases.length + notifications.users.length;
 ---
 
 <!--begin::Header-->
@@ -14,145 +42,64 @@ const distPath = path;
           <i class="bi bi-list"></i>
         </a>
       </li>
-      <li class="nav-item d-none d-md-block">
-        <a href="#" class="nav-link">Inicio</a>
-      </li>
-      <li class="nav-item d-none d-md-block">
-        <a href="#" class="nav-link">Contactos</a>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Tosibookstore</a>
       </li>
     </ul>
     <!--end::Start Navbar Links-->
 
     <!--begin::End Navbar Links-->
     <ul class="navbar-nav ms-auto">
-
-      <!-- EN ESTA PARTE CAMBIAMOS EL -->
-      <!--begin::Navbar Search-->
-      <!-- <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="bi bi-search"></i>
-        </a>
-      </li> -->
-      <!--end::Navbar Search-->
-
-      <!--begin::Messages Dropdown Menu-->
-      <li class="nav-item dropdown">
-        <p>Notificaciones</p>
-        <!-- <a class="nav-link" data-bs-toggle="dropdown" href="#">
-          <i class="bi bi-chat-text"></i>
-          <span class="navbar-badge badge text-bg-danger">3</span>
-        </a> -->
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <a href="#" class="dropdown-item">
-            <!--begin::Message-->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <img
-                  src={distPath + "/assets/img/user1-128x128.jpg"}
-                  alt="User Avatar"
-                  class="img-size-50 rounded-circle me-3"
-                />
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-end fs-7 text-danger"
-                    ><i class="bi bi-star-fill"></i></span
-                  >
-                </h3>
-                <p class="fs-7">Call me whenever you can...</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!--end::Message-->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!--begin::Message-->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <img
-                  src={distPath + "/assets/img/user8-128x128.jpg"}
-                  alt="User Avatar"
-                  class="img-size-50 rounded-circle me-3"
-                />
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-end fs-7 text-secondary">
-                    <i class="bi bi-star-fill"></i>
-                  </span>
-                </h3>
-                <p class="fs-7">I got your message bro</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!--end::Message-->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!--begin::Message-->
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <img
-                  src={distPath + "/assets/img/user3-128x128.jpg"}
-                  alt="User Avatar"
-                  class="img-size-50 rounded-circle me-3"
-                />
-              </div>
-              <div class="flex-grow-1">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-end fs-7 text-warning">
-                    <i class="bi bi-star-fill"></i>
-                  </span>
-                </h3>
-                <p class="fs-7">The subject goes here</p>
-                <p class="fs-7 text-secondary">
-                  <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                </p>
-              </div>
-            </div>
-            <!--end::Message-->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-      <!--end::Messages Dropdown Menu-->
-
       <!--begin::Notifications Dropdown Menu-->
       <li class="nav-item dropdown">
         <a class="nav-link" data-bs-toggle="dropdown" href="#">
           <i class="bi bi-bell-fill"></i>
-          <span class="navbar-badge badge text-bg-warning">15</span>
+          <span class="navbar-badge badge text-bg-danger">{totalNotifications}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
+          <span class="dropdown-item dropdown-header">{totalNotifications} Notificaciones</span>
+
+          <!-- Ventas -->
+          {notifications.sales.length > 0 && (
+            <>
+              <div class="dropdown-divider"></div>
+              {notifications.sales.map((notification) => (
+                <a href="#" class="dropdown-item">
+                  <i class={`${notification.icon} me-2 text-success`}></i> {notification.message}
+                  <span class="float-end text-secondary fs-7">{notification.time}</span>
+                </a>
+              ))}
+            </>
+          )}
+
+          <!-- Compras -->
+          {notifications.purchases.length > 0 && (
+            <>
+              <div class="dropdown-divider"></div>
+              {notifications.purchases.map((notification) => (
+                <a href="#" class="dropdown-item">
+                  <i class={`${notification.icon} me-2 text-info`}></i> {notification.message}
+                  <span class="float-end text-secondary fs-7">{notification.time}</span>
+                </a>
+              ))}
+            </>
+          )}
+
+          <!-- Usuarios -->
+          {notifications.users.length > 0 && (
+            <>
+              <div class="dropdown-divider"></div>
+              {notifications.users.map((notification) => (
+                <a href="#" class="dropdown-item">
+                  <i class={`${notification.icon} me-2 text-primary`}></i> {notification.message}
+                  <span class="float-end text-secondary fs-7">{notification.time}</span>
+                </a>
+              ))}
+            </>
+          )}
+
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-envelope me-2"></i> 4 new messages
-            <span class="float-end text-secondary fs-7">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-people-fill me-2"></i> 8 friend requests
-            <span class="float-end text-secondary fs-7">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
-            <span class="float-end text-secondary fs-7">2 days</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">
-            See All Notifications
-          </a>
+          <a href="#" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
         </div>
       </li>
       <!--end::Notifications Dropdown Menu-->
@@ -168,49 +115,60 @@ const distPath = path;
 
       <!--begin::User Menu Dropdown-->
       <li class="nav-item dropdown user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+        <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
           <img
-            src={distPath + "/assets/img/user2-160x160.jpg"}
+            src={userData.avatar}
             class="user-image rounded-circle shadow"
             alt="User Image"
+            width="30"
+            height="30"
           />
-          <span class="d-none d-md-inline">Diego </span>
+          <span class="d-none d-md-inline ms-2">{userData.name}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!--begin::User Image-->
-          <li class="user-header text-bg-primary">
+          <li class="user-header text-bg-primary py-4">
             <img
-              src={distPath + "/assets/img/user2-160x160.jpg"}
+              src={userData.avatar}
               class="rounded-circle shadow"
               alt="User Image"
+              width="90"
+              height="90"
             />
-            <p>
-              Diego Administrador Tosibookstore
-              <small>Member since Nov. 2023</small>
+            <p class="mt-3 mb-0">
+              {userData.name} - {userData.role}
+              <small>Miembro desde {userData.memberSince}</small>
             </p>
           </li>
           <!--end::User Image-->
+
           <!--begin::Menu Body-->
-          <li class="user-body">
-            <!--begin::Row-->
-            <div class="row">
-              <div class="col-4 text-center">
-                <a href="#">Followers</a>
+          <li class="user-body py-2">
+            <div class="row text-center">
+              <div class="col-4">
+                <div class="fw-bold">{userData.salesCount}</div>
+                <div class="text-muted small">Ventas</div>
               </div>
-              <div class="col-4 text-center">
-                <a href="#">Sales</a>
+              <div class="col-4">
+                <div class="fw-bold">{userData.followers}</div>
+                <div class="text-muted small">Seguidores</div>
               </div>
-              <div class="col-4 text-center">
-                <a href="#">Friends</a>
+              <div class="col-4">
+                <div class="fw-bold">{userData.friends}</div>
+                <div class="text-muted small">Amigos</div>
               </div>
             </div>
-            <!--end::Row-->
           </li>
           <!--end::Menu Body-->
+
           <!--begin::Menu Footer-->
-          <li class="user-footer">
-            <a href="#" class="btn btn-default btn-flat">Profile</a>
-            <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+          <li class="user-footer d-flex justify-content-between p-3 bg-light">
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-person me-1"></i> Perfil
+            </a>
+            <a href="#" class="btn btn-outline-danger btn-sm">
+              <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+            </a>
           </li>
           <!--end::Menu Footer-->
         </ul>
@@ -222,3 +180,199 @@ const distPath = path;
   <!--end::Container-->
 </nav>
 <!--end::Header-->
+
+<script>
+  // Script para manejar el toggle de pantalla completa
+  document.addEventListener('DOMContentLoaded', () => {
+    const fullscreenBtn = document.querySelector('[data-lte-toggle="fullscreen"]');
+
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const maximizeIcon = document.querySelector('[data-lte-icon="maximize"]');
+        const minimizeIcon = document.querySelector('[data-lte-icon="minimize"]');
+
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((e) => {
+            console.error(`Error al intentar pantalla completa: ${e.message}`);
+          });
+
+          if (maximizeIcon instanceof HTMLElement) {
+            maximizeIcon.style.display = 'none';
+          }
+          if (minimizeIcon instanceof HTMLElement) {
+            minimizeIcon.style.display = 'inline-block';
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+            if (maximizeIcon instanceof HTMLElement) {
+              maximizeIcon.style.display = 'inline-block';
+            }
+            if (minimizeIcon instanceof HTMLElement) {
+              minimizeIcon.style.display = 'none';
+            }
+          }
+        }
+      });
+    }
+  });
+
+  // Sistema de notificaciones en tiempo real (simulado)
+  document.addEventListener('DOMContentLoaded', () => {
+    // Simular la llegada de nuevas notificaciones cada cierto tiempo
+    const notificationTypes = ['venta', 'compra', 'usuario'];
+    const notificationMessages = {
+      venta: 'Nueva venta registrada',
+      compra: 'Nueva compra procesada',
+      usuario: 'Nuevo usuario registrado'
+    };
+
+    // Esta función simularía la llegada de una notificación del servidor
+    function simulateNewNotification() {
+      const randomType = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
+      const message = notificationMessages[randomType];
+
+      // Mostrar notificación toast
+      showToast(randomType, message);
+
+      // Actualizar contador de notificaciones
+      const badge = document.querySelector('.navbar-badge');
+      if (badge) {
+        const currentCount = parseInt(badge.textContent || '0');
+        badge.textContent = String(currentCount + 1);
+      }
+    }
+
+    // Función para mostrar una notificación toast
+    function showToast(type, message) {
+      // Crear elemento toast
+      const toastEl = document.createElement('div');
+      toastEl.className = 'position-fixed bottom-0 end-0 p-3';
+      toastEl.style.zIndex = '11000';
+
+      // Colores según tipo
+      const bgColor = type === 'venta' ? 'success' : (type === 'compra' ? 'info' : 'primary');
+
+      // Contenido del toast
+      toastEl.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-${bgColor} text-white">
+            <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+            <small>Ahora</small>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            ${message}
+          </div>
+        </div>
+      `;
+
+      // Añadir al body
+      document.body.appendChild(toastEl);
+
+      // Autocerrarse después de 5 segundos
+      setTimeout(() => {
+        document.body.removeChild(toastEl);
+      }, 5000 as number);
+    }
+
+    // Para efectos de demostración, simular una notificación cada 30 segundos
+    // En un entorno real, esto vendría de un websocket o polling
+    setInterval(simulateNewNotification, 30000 as number);
+
+    // Manejar el sidebar toggle
+    const sidebarToggler = document.querySelector('[data-lte-toggle="sidebar"]');
+    if (sidebarToggler) {
+      sidebarToggler.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.body.classList.toggle('sidebar-collapse');
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Estilos adicionales para mejorar el diseño */
+  .app-header {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .user-menu .dropdown-menu {
+    width: 280px;
+    padding: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .user-header {
+    position: relative;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .user-header img {
+    border: 3px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .user-header p {
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .user-header small {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 5px;
+  }
+
+  .user-footer {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .dropdown-menu-lg {
+    max-width: 350px;
+    min-width: 280px;
+  }
+
+  .navbar-badge {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    font-size: 0.65rem;
+    padding: 2px 4px;
+  }
+
+  .nav-link {
+    position: relative;
+  }
+
+  /* Ajuste vertical para la alineación del user menu */
+  .nav-item.user-menu .nav-link {
+    display: flex;
+    align-items: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .nav-item.user-menu .nav-link img {
+    margin-right: 0.25rem;
+  }
+
+  /* Efecto hover para menús dropdown */
+  .dropdown-item:hover {
+    background-color: rgba(0,0,0,0.05);
+  }
+
+  /* Estilos para los toasts de notificación */
+  .toast {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+</style>

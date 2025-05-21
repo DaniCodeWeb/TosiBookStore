@@ -1,0 +1,918 @@
+---
+import Head from "../../../components/admin/_head.astro"
+import Footer from "../../../components/admin/dashboard/_footer.astro";
+import Topbar from "../../../components/admin/dashboard/_topbar.astro";
+import Sidenav from "../../../components/admin/dashboard/_sidenav.astro";
+import Scripts from "../../../components/admin/_scripts.astro";
+
+const title = "Gestión de Usuarios";
+const path = "../../../dist";
+const mainPage = "usuarios";
+const page = "lista";
+
+// Simulated user data - in a real app, you would fetch this from an API or database
+const users = [
+  {
+    id: 1,
+    name: "Carlos Martinez",
+    email: "carlos@example.com",
+    role: "Admin",
+    status: "Activo",
+    lastLogin: "2025-05-18 10:30:15"
+  },
+  {
+    id: 2,
+    name: "María Rodriguez",
+    email: "maria@example.com",
+    role: "Editor",
+    status: "Activo",
+    lastLogin: "2025-05-19 09:15:22"
+  },
+  {
+    id: 3,
+    name: "Juan Perez",
+    email: "juan@example.com",
+    role: "Cliente",
+    status: "Inactivo",
+    lastLogin: "2025-05-10 14:45:30"
+  },
+  {
+    id: 4,
+    name: "Ana Lopez",
+    email: "ana@example.com",
+    role: "Editor",
+    status: "Activo",
+    lastLogin: "2025-05-17 16:20:45"
+  },
+  {
+    id: 5,
+    name: "Diego Sanchez",
+    email: "diego@example.com",
+    role: "Cliente",
+    status: "Activo",
+    lastLogin: "2025-05-18 11:05:33"
+  }
+];
+
+// Filter options
+const roles = ["Admin", "Editor", "Cliente"];
+const statuses = ["Activo", "Inactivo"];
+---
+
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Gestión de Usuarios</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Usuarios</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Lista de usuarios
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+
+            <!-- Filtros y Botón Crear -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Búsqueda -->
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buscar usuario..." aria-label="Buscar usuario">
+                      <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Filtro Rol -->
+                  <div class="col-md-3 mb-3">
+                    <select class="form-select" aria-label="Filtrar por rol">
+                      <option selected>Todos los roles</option>
+                      {roles.map(role => (
+                        <option value={role}>{role}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-3 mb-3">
+                    <select class="form-select" aria-label="Filtrar por estado">
+                      <option selected>Todos los estados</option>
+                      {statuses.map(status => (
+                        <option value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Botón Aplicar Filtros -->
+                  <div class="col-md-2 mb-3">
+                    <button type="button" class="btn btn-outline-primary w-100">
+                      Aplicar Filtros
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                  <i class="bi bi-person-plus-fill me-1"></i> Crear Usuario
+                </button>
+              </div>
+            </div>
+
+            <!-- Tabla de Usuarios -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lista de Usuarios</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nombre</th>
+                      <th>Email</th>
+                      <th>Rol</th>
+                      <th>Estado</th>
+                      <th>Último acceso</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map(user => (
+                      <tr>
+                        <td>{user.id}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>
+                          <span class={`badge ${
+                            user.role === "Admin" ? "text-bg-danger" :
+                            user.role === "Editor" ? "text-bg-warning" :
+                            "text-bg-info"
+                          }`}>
+                            {user.role}
+                          </span>
+                        </td>
+                        <td>
+                          <span class={`badge ${user.status === "Activo" ? "text-bg-success" : "text-bg-secondary"}`}>
+                            {user.status}
+                          </span>
+                        </td>
+                        <td>{user.lastLogin}</td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewUserModal">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal Crear Usuario -->
+      <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createUserModalLabel">Crear Nuevo Usuario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="userName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="userName" placeholder="Ingrese nombre completo">
+                </div>
+                <div class="mb-3">
+                  <label for="userEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="userEmail" placeholder="Ingrese email">
+                </div>
+                <div class="mb-3">
+                  <label for="userPassword" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="userPassword" placeholder="Ingrese contraseña">
+                </div>
+                <div class="mb-3">
+                  <label for="userRole" class="form-label">Rol</label>
+                  <select class="form-select" id="userRole">
+                    {roles.map(role => (
+                      <option value={role}>{role}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="userStatus" class="form-label">Estado</label>
+                  <select class="form-select" id="userStatus">
+                    {statuses.map(status => (
+                      <option value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Ver Usuario -->
+      <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewUserModalLabel">Detalles del Usuario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="text-center mb-4">
+                <img src={path + "/assets/img/user1-128x128.jpg"} alt="User Avatar" class="rounded-circle img-fluid" style="width: 100px;">
+                <h4 class="mt-2">Carlos Martinez</h4>
+                <span class="badge text-bg-danger">Admin</span>
+                <span class="badge text-bg-success">Activo</span>
+              </div>
+
+              <div class="mb-3">
+                <strong>Email:</strong> carlos@example.com
+              </div>
+              <div class="mb-3">
+                <strong>Fecha de registro:</strong> 2025-01-15
+              </div>
+              <div class="mb-3">
+                <strong>Último acceso:</strong> 2025-05-18 10:30:15
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar Usuario -->
+      <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="editUserName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="editUserName" value="Carlos Martinez">
+                </div>
+                <div class="mb-3">
+                  <label for="editUserEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="editUserEmail" value="carlos@example.com">
+                </div>
+                <div class="mb-3">
+                  <label for="editUserRole" class="form-label">Rol</label>
+                  <select class="form-select" id="editUserRole">
+                    {roles.map(role => (
+                      <option value={role} selected={role === "Admin"}>{role}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editUserStatus" class="form-label">Estado</label>
+                  <select class="form-select" id="editUserStatus">
+                    {statuses.map(status => (
+                      <option value={status} selected={status === "Activo"}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="resetPassword">
+                  <label class="form-check-label" for="resetPassword">
+                    Restablecer contraseña
+                  </label>
+                </div>
+                <div class="mb-3" id="newPasswordContainer" style="display: none;">
+                  <label for="newPassword" class="form-label">Nueva contraseña</label>
+                  <input type="password" class="form-control" id="newPassword">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Eliminar Usuario -->
+      <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deleteUserModalLabel">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro que desea eliminar al usuario <strong>Carlos Martinez</strong>?</p>
+              <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Script-->
+    <Scripts path={path} />
+
+    <!-- Script para manejar la opción de restablecer contraseña -->
+    <script is:inline>
+// Inicializar componentes cuando el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar datos
+  initUserManagement();
+});
+
+/**
+ * Inicializa la gestión de usuarios
+ */
+function initUserManagement() {
+  // Usuarios simulados (en una aplicación real, se obtendrían de una base de datos)
+  let users = [
+    {
+      id: 1,
+      name: "Carlos Martinez",
+      email: "carlos@example.com",
+      role: "Admin",
+      status: "Activo",
+      lastLogin: "2025-05-18 10:30:15",
+      registrationDate: "2025-01-15"
+    },
+    {
+      id: 2,
+      name: "María Rodriguez",
+      email: "maria@example.com",
+      role: "Editor",
+      status: "Activo",
+      lastLogin: "2025-05-19 09:15:22",
+      registrationDate: "2025-02-03"
+    },
+    {
+      id: 3,
+      name: "Juan Perez",
+      email: "juan@example.com",
+      role: "Cliente",
+      status: "Inactivo",
+      lastLogin: "2025-05-10 14:45:30",
+      registrationDate: "2025-01-20"
+    },
+    {
+      id: 4,
+      name: "Ana Lopez",
+      email: "ana@example.com",
+      role: "Editor",
+      status: "Activo",
+      lastLogin: "2025-05-17 16:20:45",
+      registrationDate: "2025-03-12"
+    },
+    {
+      id: 5,
+      name: "Diego Sanchez",
+      email: "diego@example.com",
+      role: "Cliente",
+      status: "Activo",
+      lastLogin: "2025-05-18 11:05:33",
+      registrationDate: "2025-02-28"
+    }
+  ];
+
+  // Inicializar manejadores de eventos
+  initEventHandlers(users);
+
+  // Configurar comportamiento de modales
+  setupModals(users);
+
+  // Configurar filtros
+  setupFilters(users);
+}
+
+/**
+ * Configura los manejadores de eventos para la interfaz
+ */
+function initEventHandlers(users) {
+  // Botón de aplicar filtros
+  const applyFiltersBtn = document.querySelector('.card-body .btn-outline-primary');
+  if (applyFiltersBtn) {
+    applyFiltersBtn.addEventListener('click', function() {
+      filterUsers(users);
+    });
+  }
+
+  // Campo de búsqueda (filtrar al presionar Enter)
+  const searchInput = document.querySelector('.input-group input.form-control');
+  if (searchInput) {
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        filterUsers(users);
+      }
+    });
+  }
+
+  // Botón de búsqueda
+  const searchBtn = document.querySelector('.input-group .btn-primary');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', function() {
+      filterUsers(users);
+    });
+  }
+
+  // Enlace para la paginación
+  const paginationLinks = document.querySelectorAll('.pagination .page-link');
+  paginationLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      // En una aplicación real, aquí se cambiaría de página
+      // Para esta demo simplemente evitamos la navegación
+    });
+  });
+
+  // Checkbox para restablecer contraseña
+  const resetPasswordCheckbox = document.getElementById('resetPassword');
+  const newPasswordContainer = document.getElementById('newPasswordContainer');
+
+  if (resetPasswordCheckbox && newPasswordContainer) {
+    resetPasswordCheckbox.addEventListener('change', function() {
+      newPasswordContainer.style.display = this.checked ? 'block' : 'none';
+    });
+  }
+
+  // Botones de guardar en los modales
+  setupSaveButtons(users);
+}
+
+/**
+ * Configura los botones de guardar en los modales
+ */
+function setupSaveButtons(users) {
+  // Botón guardar nuevo usuario
+  const saveNewUserBtn = document.querySelector('#createUserModal .btn-success');
+  if (saveNewUserBtn) {
+    saveNewUserBtn.addEventListener('click', function() {
+      const name = document.getElementById('userName').value;
+      const email = document.getElementById('userEmail').value;
+      const role = document.getElementById('userRole').value;
+      const status = document.getElementById('userStatus').value;
+
+      if (name && email) {
+        // Crear nuevo usuario
+        const newUser = {
+          id: users.length + 1,
+          name: name,
+          email: email,
+          role: role,
+          status: status,
+          lastLogin: 'Nunca',
+          registrationDate: new Date().toISOString().split('T')[0]
+        };
+
+        users.push(newUser);
+
+        // Recargar tabla (en una app real haríamos una petición AJAX)
+        updateUserTable(users);
+
+        // Cerrar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
+        modal.hide();
+
+        // Limpiar formulario
+        document.getElementById('userName').value = '';
+        document.getElementById('userEmail').value = '';
+        document.getElementById('userPassword').value = '';
+
+        // Mostrar notificación
+        showNotification('Usuario creado correctamente', 'success');
+      } else {
+        showNotification('Por favor complete todos los campos obligatorios', 'danger');
+      }
+    });
+  }
+
+  // Botón actualizar usuario
+  const updateUserBtn = document.querySelector('#editUserModal .btn-warning');
+  if (updateUserBtn) {
+    updateUserBtn.addEventListener('click', function() {
+      const name = document.getElementById('editUserName').value;
+      const email = document.getElementById('editUserEmail').value;
+      const role = document.getElementById('editUserRole').value;
+      const status = document.getElementById('editUserStatus').value;
+
+      if (name && email) {
+        // En una app real, actualizaríamos el usuario en la base de datos
+        // Para esta demo, simulamos la actualización
+
+        // Encontrar el usuario por ID (almacenado en un atributo de datos)
+        const userId = parseInt(document.getElementById('editUserModal').getAttribute('data-user-id'));
+        const userIndex = users.findIndex(u => u.id === userId);
+
+        if (userIndex !== -1) {
+          users[userIndex].name = name;
+          users[userIndex].email = email;
+          users[userIndex].role = role;
+          users[userIndex].status = status;
+
+          // Actualizar tabla
+          updateUserTable(users);
+
+          // Cerrar modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+          modal.hide();
+
+          // Mostrar notificación
+          showNotification('Usuario actualizado correctamente', 'success');
+        }
+      } else {
+        showNotification('Por favor complete todos los campos obligatorios', 'danger');
+      }
+    });
+  }
+
+  // Botón eliminar usuario
+  const deleteUserBtn = document.querySelector('#deleteUserModal .btn-danger');
+  if (deleteUserBtn) {
+    deleteUserBtn.addEventListener('click', function() {
+      // En una app real, eliminaríamos el usuario de la base de datos
+      // Para esta demo, simulamos la eliminación
+
+      // Encontrar el usuario por ID (almacenado en un atributo de datos)
+      const userId = parseInt(document.getElementById('deleteUserModal').getAttribute('data-user-id'));
+      const userIndex = users.findIndex(u => u.id === userId);
+
+      if (userIndex !== -1) {
+        users.splice(userIndex, 1);
+
+        // Actualizar tabla
+        updateUserTable(users);
+
+        // Cerrar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteUserModal'));
+        modal.hide();
+
+        // Mostrar notificación
+        showNotification('Usuario eliminado correctamente', 'success');
+      }
+    });
+  }
+}
+
+/**
+ * Configura los filtros de usuarios
+ */
+function setupFilters(users) {
+  // Filtro inicial (mostrar todos)
+  updateUserTable(users);
+}
+
+/**
+ * Filtra la lista de usuarios según los criterios seleccionados
+ */
+function filterUsers(allUsers) {
+  const searchText = document.querySelector('.input-group input.form-control').value.toLowerCase();
+  const roleFilter = document.querySelector('select[aria-label="Filtrar por rol"]').value;
+  const statusFilter = document.querySelector('select[aria-label="Filtrar por estado"]').value;
+
+  let filteredUsers = [...allUsers];
+
+  // Filtrar por texto de búsqueda
+  if (searchText) {
+    filteredUsers = filteredUsers.filter(user =>
+      user.name.toLowerCase().includes(searchText) ||
+      user.email.toLowerCase().includes(searchText)
+    );
+  }
+
+  // Filtrar por rol
+  if (roleFilter && roleFilter !== 'Todos los roles') {
+    filteredUsers = filteredUsers.filter(user => user.role === roleFilter);
+  }
+
+  // Filtrar por estado
+  if (statusFilter && statusFilter !== 'Todos los estados') {
+    filteredUsers = filteredUsers.filter(user => user.status === statusFilter);
+  }
+
+  // Actualizar tabla con resultados filtrados
+  updateUserTable(filteredUsers);
+}
+
+/**
+ * Actualiza la tabla de usuarios con los datos proporcionados
+ * @param {Array} users - Lista de usuarios a mostrar
+ */
+function updateUserTable(users) {
+  const tbody = document.querySelector('table tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  if (users.length === 0) {
+    // Mostrar mensaje si no hay resultados
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td colspan="7" class="text-center">No se encontraron usuarios</td>';
+    tbody.appendChild(tr);
+    return;
+  }
+
+  // Renderizar cada usuario
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.name}</td>
+      <td>${user.email}</td>
+      <td>
+        <span class="badge ${
+          user.role === "Admin" ? "text-bg-danger" :
+          user.role === "Editor" ? "text-bg-warning" :
+          "text-bg-info"
+        }">
+          ${user.role}
+        </span>
+      </td>
+      <td>
+        <span class="badge ${user.status === "Activo" ? "text-bg-success" : "text-bg-secondary"}">
+          ${user.status}
+        </span>
+      </td>
+      <td>${user.lastLogin}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-sm btn-info view-user" data-user-id="${user.id}">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-warning edit-user" data-user-id="${user.id}">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-danger delete-user" data-user-id="${user.id}">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  // Configurar botones de acción
+  configureActionButtons(users);
+}
+
+/**
+ * Configura los botones de acción para cada fila de usuario
+ */
+function configureActionButtons(users) {
+  // Botones Ver
+  document.querySelectorAll('.view-user').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const userId = parseInt(this.getAttribute('data-user-id'));
+      const user = users.find(u => u.id === userId);
+
+      if (user) {
+        // Actualizar modal con datos del usuario
+        document.querySelector('#viewUserModal h4').textContent = user.name;
+
+        const badges = document.querySelectorAll('#viewUserModal .badge');
+        badges[0].textContent = user.role;
+        badges[0].className = `badge ${
+          user.role === "Admin" ? "text-bg-danger" :
+          user.role === "Editor" ? "text-bg-warning" :
+          "text-bg-info"
+        }`;
+
+        badges[1].textContent = user.status;
+        badges[1].className = `badge ${user.status === "Activo" ? "text-bg-success" : "text-bg-secondary"}`;
+
+        const modalBody = document.querySelector('#viewUserModal .modal-body');
+        const details = modalBody.querySelectorAll('div.mb-3');
+        details[0].innerHTML = `<strong>Email:</strong> ${user.email}`;
+        details[1].innerHTML = `<strong>Fecha de registro:</strong> ${user.registrationDate || 'No disponible'}`;
+        details[2].innerHTML = `<strong>Último acceso:</strong> ${user.lastLogin}`;
+
+        // Mostrar modal
+        const viewModal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+        viewModal.show();
+      }
+    });
+  });
+
+  // Botones Editar
+  document.querySelectorAll('.edit-user').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const userId = parseInt(this.getAttribute('data-user-id'));
+      const user = users.find(u => u.id === userId);
+
+      if (user) {
+        // Guardar ID del usuario en el modal para usarlo al guardar
+        document.getElementById('editUserModal').setAttribute('data-user-id', userId);
+
+        // Actualizar formulario con datos del usuario
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserEmail').value = user.email;
+
+        // Seleccionar rol correcto
+        const roleSelect = document.getElementById('editUserRole');
+        for (let i = 0; i < roleSelect.options.length; i++) {
+          if (roleSelect.options[i].value === user.role) {
+            roleSelect.selectedIndex = i;
+            break;
+          }
+        }
+
+        // Seleccionar estado correcto
+        const statusSelect = document.getElementById('editUserStatus');
+        for (let i = 0; i < statusSelect.options.length; i++) {
+          if (statusSelect.options[i].value === user.status) {
+            statusSelect.selectedIndex = i;
+            break;
+          }
+        }
+
+        // Resetear checkbox y campo de contraseña
+        document.getElementById('resetPassword').checked = false;
+        document.getElementById('newPasswordContainer').style.display = 'none';
+        document.getElementById('newPassword').value = '';
+
+        // Mostrar modal
+        const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        editModal.show();
+      }
+    });
+  });
+
+  // Botones Eliminar
+  document.querySelectorAll('.delete-user').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const userId = parseInt(this.getAttribute('data-user-id'));
+      const user = users.find(u => u.id === userId);
+
+      if (user) {
+        // Guardar ID del usuario en el modal para usarlo al confirmar
+        document.getElementById('deleteUserModal').setAttribute('data-user-id', userId);
+
+        // Actualizar mensaje de confirmación
+        document.querySelector('#deleteUserModal .modal-body p:first-child').innerHTML =
+          `¿Está seguro que desea eliminar al usuario <strong>${user.name}</strong>?`;
+
+        // Mostrar modal
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+        deleteModal.show();
+      }
+    });
+  });
+}
+
+/**
+ * Configura el comportamiento de los modales
+ */
+function setupModals(users) {
+  // Modal de crear usuario - limpiar formulario al cerrarse
+  const createUserModal = document.getElementById('createUserModal');
+  if (createUserModal) {
+    createUserModal.addEventListener('hidden.bs.modal', function() {
+      document.getElementById('userName').value = '';
+      document.getElementById('userEmail').value = '';
+      document.getElementById('userPassword').value = '';
+      document.getElementById('userRole').selectedIndex = 0;
+      document.getElementById('userStatus').selectedIndex = 0;
+    });
+  }
+
+  // Modal de editar usuario - resetear checkbox al cerrarse
+  const editUserModal = document.getElementById('editUserModal');
+  if (editUserModal) {
+    editUserModal.addEventListener('hidden.bs.modal', function() {
+      document.getElementById('resetPassword').checked = false;
+      document.getElementById('newPasswordContainer').style.display = 'none';
+    });
+  }
+}
+
+/**
+ * Muestra una notificación de tipo toast
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo de notificación (success, danger, warning, info)
+ */
+function showNotification(message, type = 'info') {
+  // Crear contenedor de notificaciones si no existe
+  let notificationContainer = document.getElementById('notification-container');
+  if (!notificationContainer) {
+    notificationContainer = document.createElement('div');
+    notificationContainer.id = 'notification-container';
+    notificationContainer.className = 'position-fixed top-0 end-0 p-3';
+    notificationContainer.style.zIndex = '1100';
+    document.body.appendChild(notificationContainer);
+  }
+
+  // Crear el toast
+  const toastId = 'toast-' + Date.now();
+  const toastHtml = `
+    <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true" id="${toastId}">
+      <div class="d-flex">
+        <div class="toast-body">
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  `;
+
+  notificationContainer.insertAdjacentHTML('beforeend', toastHtml);
+
+  // Inicializar y mostrar el toast
+  const toastElement = document.getElementById(toastId);
+  const toast = new bootstrap.Toast(toastElement, {
+    autohide: true,
+    delay: 3000
+  });
+
+  toast.show();
+
+  // Eliminar el toast del DOM cuando se oculte
+  toastElement.addEventListener('hidden.bs.toast', function() {
+    toastElement.remove();
+  });
+}
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>

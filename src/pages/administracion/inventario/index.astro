@@ -1,0 +1,669 @@
+---
+import Head from "../../../components/admin/_head.astro"
+import Footer from "../../../components/admin/dashboard/_footer.astro";
+import Topbar from "../../../components/admin/dashboard/_topbar.astro";
+import Sidenav from "../../../components/admin/dashboard/_sidenav.astro";
+import Scripts from "../../../components/admin/_scripts.astro";
+
+const title = "Gestión de Inventario";
+const path = "../../../dist";
+const mainPage = "inventario";
+const page = "lista";
+
+// Simulated inventory data - in a real app, you would fetch this from an API or database
+const inventoryItems = [
+  {
+    id: 1,
+    productId: 101,
+    productName: "Laptop HP ProBook",
+    sku: "LP-HP-001",
+    quantity: 15,
+    location: "Almacén A",
+    lastUpdated: "2025-05-18 10:30:15",
+    status: "Disponible"
+  },
+  {
+    id: 2,
+    productId: 102,
+    productName: "Monitor Dell 27\"",
+    sku: "MN-DL-027",
+    quantity: 8,
+    location: "Almacén B",
+    lastUpdated: "2025-05-19 09:15:22",
+    status: "Disponible"
+  },
+  {
+    id: 3,
+    productId: 103,
+    productName: "Teclado Logitech K380",
+    sku: "KB-LG-380",
+    quantity: 0,
+    location: "Almacén A",
+    lastUpdated: "2025-05-10 14:45:30",
+    status: "Sin Stock"
+  },
+  {
+    id: 4,
+    productId: 104,
+    productName: "Mouse Inalámbrico Microsoft",
+    sku: "MS-MW-104",
+    quantity: 23,
+    location: "Almacén C",
+    lastUpdated: "2025-05-17 16:20:45",
+    status: "Disponible"
+  },
+  {
+    id: 5,
+    productId: 105,
+    productName: "Cable HDMI 2m",
+    sku: "CB-HD-2M",
+    quantity: 3,
+    location: "Almacén B",
+    lastUpdated: "2025-05-18 11:05:33",
+    status: "Stock Bajo"
+  }
+];
+
+// Filter options
+const locations = ["Almacén A", "Almacén B", "Almacén C"];
+const statuses = ["Disponible", "Stock Bajo", "Sin Stock"];
+---
+
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Gestión de Inventario</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Inventario</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Lista de inventario
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+
+            <!-- Filtros -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Búsqueda -->
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="searchInventory" placeholder="Buscar producto..." aria-label="Buscar producto">
+                      <button class="btn btn-primary" type="button" id="btnSearch">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Filtro Ubicación -->
+                  <div class="col-md-3 mb-3">
+                    <select class="form-select" id="filterLocation" aria-label="Filtrar por ubicación">
+                      <option selected value="">Todas las ubicaciones</option>
+                      {locations.map(location => (
+                        <option value={location}>{location}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-3 mb-3">
+                    <select class="form-select" id="filterStatus" aria-label="Filtrar por estado">
+                      <option selected value="">Todos los estados</option>
+                      {statuses.map(status => (
+                        <option value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Botón Aplicar Filtros -->
+                  <div class="col-md-2 mb-3">
+                    <button type="button" class="btn btn-outline-primary w-100" id="btnApplyFilters">
+                      Aplicar Filtros
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Inventario -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lista de Inventario</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap" id="inventoryTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Producto</th>
+                      <th>SKU</th>
+                      <th>Cantidad</th>
+                      <th>Ubicación</th>
+                      <th>Estado</th>
+                      <th>Última Actualización</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {inventoryItems.map(item => (
+                      <tr data-id={item.id} data-productid={item.productId}>
+                        <td>{item.id}</td>
+                        <td>{item.productName}</td>
+                        <td>{item.sku}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.location}</td>
+                        <td>
+                          <span class={`badge ${
+                            item.status === "Disponible" ? "text-bg-success" :
+                            item.status === "Stock Bajo" ? "text-bg-warning" :
+                            "text-bg-danger"
+                          }`}>
+                            {item.status}
+                          </span>
+                        </td>
+                        <td>{item.lastUpdated}</td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info btn-view" data-id={item.id} data-bs-toggle="modal" data-bs-target="#viewInventoryModal">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning btn-edit" data-id={item.id} data-bs-toggle="modal" data-bs-target="#editInventoryModal">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger btn-delete" data-id={item.id} data-name={item.productName} data-bs-toggle="modal" data-bs-target="#deleteInventoryModal">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal Ver Inventario -->
+      <div class="modal fade" id="viewInventoryModal" tabindex="-1" aria-labelledby="viewInventoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewInventoryModalLabel">Detalles del Inventario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="text-center mb-4">
+                <img src={path + "/assets/img/product-default.png"} alt="Product Image" class="img-fluid" style="max-height: 150px;">
+                <h4 class="mt-2" id="viewProductName">Laptop HP ProBook</h4>
+                <span class="badge text-bg-success" id="viewStatus">Disponible</span>
+              </div>
+
+              <div class="mb-3">
+                <strong>SKU:</strong> <span id="viewSku">LP-HP-001</span>
+              </div>
+              <div class="mb-3">
+                <strong>Cantidad actual:</strong> <span id="viewQuantity">15</span>
+              </div>
+              <div class="mb-3">
+                <strong>Ubicación:</strong> <span id="viewLocation">Almacén A</span>
+              </div>
+              <div class="mb-3">
+                <strong>Última actualización:</strong> <span id="viewLastUpdated">2025-05-18 10:30:15</span>
+              </div>
+              <!-- Puedes agregar un historial breve de movimientos si es necesario -->
+              <div class="mb-3">
+                <strong>ID de Producto:</strong> <span id="viewProductId">101</span>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar Inventario -->
+      <div class="modal fade" id="editInventoryModal" tabindex="-1" aria-labelledby="editInventoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editInventoryModalLabel">Editar Inventario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editInventoryForm">
+                <input type="hidden" id="editInventoryId">
+                <input type="hidden" id="editProductId">
+
+                <div class="mb-3">
+                  <label for="editProductName" class="form-label">Producto</label>
+                  <input type="text" class="form-control" id="editProductName" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="editSku" class="form-label">SKU</label>
+                  <input type="text" class="form-control" id="editSku" readonly>
+                </div>
+                <div class="mb-3">
+                  <label for="editQuantity" class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" id="editQuantity" min="0">
+                </div>
+                <div class="mb-3">
+                  <label for="editLocation" class="form-label">Ubicación</label>
+                  <select class="form-select" id="editLocation">
+                    {locations.map(location => (
+                      <option value={location}>{location}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editStatus" class="form-label">Estado</label>
+                  <select class="form-select" id="editStatus">
+                    {statuses.map(status => (
+                      <option value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="editNotes" class="form-label">Notas de actualización</label>
+                  <textarea class="form-control" id="editNotes" rows="3" placeholder="Motivo del cambio de inventario..."></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning" id="btnUpdateInventory">Actualizar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Eliminar Inventario -->
+      <div class="modal fade" id="deleteInventoryModal" tabindex="-1" aria-labelledby="deleteInventoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deleteInventoryModalLabel">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro que desea eliminar el inventario del producto <strong id="deleteProductName">Laptop HP ProBook</strong>?</p>
+              <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Esta acción no se puede deshacer.</p>
+              <input type="hidden" id="deleteInventoryId">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" id="btnConfirmDelete">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Script-->
+    <Scripts path={path} />
+
+    <!-- Script para manejar la funcionalidad del inventario -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Referencia a los elementos del DOM
+        const inventoryTable = document.getElementById('inventoryTable');
+        const searchInput = document.getElementById('searchInventory');
+        const btnSearch = document.getElementById('btnSearch');
+        const filterLocation = document.getElementById('filterLocation');
+        const filterStatus = document.getElementById('filterStatus');
+        const btnApplyFilters = document.getElementById('btnApplyFilters');
+
+        // Datos del inventario simulado (en una aplicación real, estos datos vendrían de una API o base de datos)
+        let inventoryData = [
+          {
+            id: 1,
+            productId: 101,
+            productName: "Laptop HP ProBook",
+            sku: "LP-HP-001",
+            quantity: 15,
+            location: "Almacén A",
+            lastUpdated: "2025-05-18 10:30:15",
+            status: "Disponible"
+          },
+          {
+            id: 2,
+            productId: 102,
+            productName: "Monitor Dell 27\"",
+            sku: "MN-DL-027",
+            quantity: 8,
+            location: "Almacén B",
+            lastUpdated: "2025-05-19 09:15:22",
+            status: "Disponible"
+          },
+          {
+            id: 3,
+            productId: 103,
+            productName: "Teclado Logitech K380",
+            sku: "KB-LG-380",
+            quantity: 0,
+            location: "Almacén A",
+            lastUpdated: "2025-05-10 14:45:30",
+            status: "Sin Stock"
+          },
+          {
+            id: 4,
+            productId: 104,
+            productName: "Mouse Inalámbrico Microsoft",
+            sku: "MS-MW-104",
+            quantity: 23,
+            location: "Almacén C",
+            lastUpdated: "2025-05-17 16:20:45",
+            status: "Disponible"
+          },
+          {
+            id: 5,
+            productId: 105,
+            productName: "Cable HDMI 2m",
+            sku: "CB-HD-2M",
+            quantity: 3,
+            location: "Almacén B",
+            lastUpdated: "2025-05-18 11:05:33",
+            status: "Stock Bajo"
+          }
+        ];
+
+        // Función para obtener la fecha actual en formato YYYY-MM-DD HH:MM:SS
+        function getCurrentDateTime() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          const seconds = String(now.getSeconds()).padStart(2, '0');
+
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Función para actualizar la tabla con los datos actuales
+        function updateTable(data) {
+          const tbody = inventoryTable.querySelector('tbody');
+          tbody.innerHTML = '';
+
+          data.forEach(item => {
+            const statusClass =
+              item.status === "Disponible" ? "text-bg-success" :
+              item.status === "Stock Bajo" ? "text-bg-warning" :
+              "text-bg-danger";
+
+            const row = document.createElement('tr');
+            row.setAttribute('data-id', item.id);
+            row.setAttribute('data-productid', item.productId);
+
+            row.innerHTML = `
+              <td>${item.id}</td>
+              <td>${item.productName}</td>
+              <td>${item.sku}</td>
+              <td>${item.quantity}</td>
+              <td>${item.location}</td>
+              <td><span class="badge ${statusClass}">${item.status}</span></td>
+              <td>${item.lastUpdated}</td>
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-info btn-view" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#viewInventoryModal">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-warning btn-edit" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#editInventoryModal">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="${item.id}" data-name="${item.productName}" data-bs-toggle="modal" data-bs-target="#deleteInventoryModal">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            `;
+
+            tbody.appendChild(row);
+          });
+
+          // Volver a añadir los event listeners a los botones
+          attachButtonEventListeners();
+        }
+
+        // Función para adjuntar event listeners a los botones de acción
+        function attachButtonEventListeners() {
+          // Botones de visualización
+          document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const itemId = parseInt(this.getAttribute('data-id'));
+              const item = inventoryData.find(i => i.id === itemId);
+
+              if (item) {
+                document.getElementById('viewProductName').textContent = item.productName;
+                document.getElementById('viewSku').textContent = item.sku;
+                document.getElementById('viewQuantity').textContent = item.quantity;
+                document.getElementById('viewLocation').textContent = item.location;
+                document.getElementById('viewStatus').textContent = item.status;
+                document.getElementById('viewLastUpdated').textContent = item.lastUpdated;
+                document.getElementById('viewProductId').textContent = item.productId;
+
+                // Actualizar clase del badge de estado
+                const statusBadge = document.getElementById('viewStatus');
+                statusBadge.className = 'badge';
+                if (item.status === 'Disponible') {
+                  statusBadge.classList.add('text-bg-success');
+                } else if (item.status === 'Stock Bajo') {
+                  statusBadge.classList.add('text-bg-warning');
+                } else {
+                  statusBadge.classList.add('text-bg-danger');
+                }
+              }
+            });
+          });
+
+          // Botones de edición
+          document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const itemId = parseInt(this.getAttribute('data-id'));
+              const item = inventoryData.find(i => i.id === itemId);
+
+              if (item) {
+                document.getElementById('editInventoryId').value = item.id;
+                document.getElementById('editProductId').value = item.productId;
+                document.getElementById('editProductName').value = item.productName;
+                document.getElementById('editSku').value = item.sku;
+                document.getElementById('editQuantity').value = item.quantity;
+
+                // Seleccionar la ubicación correcta
+                const locationSelect = document.getElementById('editLocation');
+                for (let i = 0; i < locationSelect.options.length; i++) {
+                  if (locationSelect.options[i].value === item.location) {
+                    locationSelect.selectedIndex = i;
+                    break;
+                  }
+                }
+
+                // Seleccionar el estado correcto
+                const statusSelect = document.getElementById('editStatus');
+                for (let i = 0; i < statusSelect.options.length; i++) {
+                  if (statusSelect.options[i].value === item.status) {
+                    statusSelect.selectedIndex = i;
+                    break;
+                  }
+                }
+
+                // Limpiar las notas
+                document.getElementById('editNotes').value = '';
+              }
+            });
+          });
+
+          // Botones de eliminación
+          document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', function() {
+              const itemId = parseInt(this.getAttribute('data-id'));
+              const productName = this.getAttribute('data-name');
+
+              document.getElementById('deleteProductName').textContent = productName;
+              document.getElementById('deleteInventoryId').value = itemId;
+            });
+          });
+        }
+
+        // Función para filtrar los datos según los criterios
+        function filterData() {
+          const searchTerm = searchInput.value.toLowerCase();
+          const locationFilter = filterLocation.value;
+          const statusFilter = filterStatus.value;
+
+          const filteredData = inventoryData.filter(item => {
+            // Filtrar por término de búsqueda
+            const matchesSearch =
+              item.productName.toLowerCase().includes(searchTerm) ||
+              item.sku.toLowerCase().includes(searchTerm);
+
+            // Filtrar por ubicación
+            const matchesLocation =
+              locationFilter === '' || item.location === locationFilter;
+
+            // Filtrar por estado
+            const matchesStatus =
+              statusFilter === '' || item.status === statusFilter;
+
+            return matchesSearch && matchesLocation && matchesStatus;
+          });
+
+          updateTable(filteredData);
+        }
+
+        // Determinar el estado automáticamente basado en la cantidad
+        function determineStatus(quantity) {
+          if (quantity <= 0) {
+            return "Sin Stock";
+          } else if (quantity <= 5) {
+            return "Stock Bajo";
+          } else {
+            return "Disponible";
+          }
+        }
+
+        // Event listeners
+        btnSearch.addEventListener('click', filterData);
+        searchInput.addEventListener('keyup', function(e) {
+          if (e.key === 'Enter') {
+            filterData();
+          }
+        });
+
+        btnApplyFilters.addEventListener('click', filterData);
+
+        // Actualizar inventario
+        document.getElementById('btnUpdateInventory').addEventListener('click', function() {
+          const itemId = parseInt(document.getElementById('editInventoryId').value);
+          const quantity = parseInt(document.getElementById('editQuantity').value);
+          const location = document.getElementById('editLocation').value;
+          const status = document.getElementById('editStatus').value;
+
+          // Encontrar el elemento en el array
+          const itemIndex = inventoryData.findIndex(i => i.id === itemId);
+
+          if (itemIndex !== -1) {
+            // Actualizar los datos
+            inventoryData[itemIndex].quantity = quantity;
+            inventoryData[itemIndex].location = location;
+            inventoryData[itemIndex].status = status;
+            inventoryData[itemIndex].lastUpdated = getCurrentDateTime();
+
+            // Cerrar el modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editInventoryModal'));
+            modal.hide();
+
+            // Actualizar la tabla
+            updateTable(inventoryData);
+
+            // Mostrar mensaje de éxito (puedes implementar un sistema de notificaciones)
+            alert('Inventario actualizado correctamente');
+          }
+        });
+
+        // Eliminar inventario
+        document.getElementById('btnConfirmDelete').addEventListener('click', function() {
+          const itemId = parseInt(document.getElementById('deleteInventoryId').value);
+
+          // Encontrar el elemento en el array
+          const itemIndex = inventoryData.findIndex(i => i.id === itemId);
+
+          if (itemIndex !== -1) {
+            // Eliminar el elemento
+            inventoryData.splice(itemIndex, 1);
+
+            // Cerrar el modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('deleteInventoryModal'));
+            modal.hide();
+
+            // Actualizar la tabla
+            updateTable(inventoryData);
+
+            // Mostrar mensaje de éxito (puedes implementar un sistema de notificaciones)
+            alert('Inventario eliminado correctamente');
+          }
+        });
+
+        // Inicializar los event listeners para los botones
+        attachButtonEventListeners();
+      });
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>

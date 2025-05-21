@@ -1,0 +1,1101 @@
+---
+import Head from "../../../components/admin/_head.astro"
+import Footer from "../../../components/admin/dashboard/_footer.astro";
+import Topbar from "../../../components/admin/dashboard/_topbar.astro";
+import Sidenav from "../../../components/admin/dashboard/_sidenav.astro";
+import Scripts from "../../../components/admin/_scripts.astro";
+
+const title = "Gestión de Compras";
+const path = "../../../dist";
+const mainPage = "compras";
+const page = "lista";
+
+// Simulated purchases data - in a real app, you would fetch this from an API or database
+const compras = [
+  {
+    id: 1,
+    proveedor: "Distribuidora Tecnológica S.A.",
+    responsable: "Laura Jimenez",
+    fecha: "2025-05-15",
+    total: 3200.50,
+    estado: "Recibida",
+    metodo: "Transferencia"
+  },
+  {
+    id: 2,
+    proveedor: "Suministros Oficina Express",
+    responsable: "Miguel Santos",
+    fecha: "2025-05-17",
+    total: 950.25,
+    estado: "Pendiente",
+    metodo: "Crédito"
+  },
+  {
+    id: 3,
+    proveedor: "Importadora Global",
+    responsable: "Andrea Vega",
+    fecha: "2025-05-14",
+    total: 1745.60,
+    estado: "Cancelada",
+    metodo: "Efectivo"
+  },
+  {
+    id: 4,
+    proveedor: "Papelería Industrial",
+    responsable: "Miguel Santos",
+    fecha: "2025-05-12",
+    total: 560.30,
+    estado: "Recibida",
+    metodo: "Transferencia"
+  },
+  {
+    id: 5,
+    proveedor: "Equipos Médicos Salud Total",
+    responsable: "Laura Jimenez",
+    fecha: "2025-05-10",
+    total: 5850.75,
+    estado: "Pendiente",
+    metodo: "Crédito"
+  }
+];
+
+// Filter options
+const estados = ["Recibida", "Pendiente", "Cancelada", "En tránsito"];
+const metodos = ["Transferencia", "Efectivo", "Crédito", "Cheque"];
+const responsables = ["Laura Jimenez", "Miguel Santos", "Andrea Vega", "Carlos Lopez", "Daniela Ruiz"];
+---
+
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Gestión de Compras</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Compras</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Lista de compras
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+
+            <!-- Filtros y Botón Crear -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Búsqueda -->
+                  <div class="col-md-3 mb-3">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buscar compra..." aria-label="Buscar compra">
+                      <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por estado">
+                      <option selected>Todos los estados</option>
+                      {estados.map(estado => (
+                        <option value={estado}>{estado}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Método de Pago -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por método">
+                      <option selected>Todos los métodos</option>
+                      {metodos.map(metodo => (
+                        <option value={metodo}>{metodo}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Responsable -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por responsable">
+                      <option selected>Todos los responsables</option>
+                      {responsables.map(responsable => (
+                        <option value={responsable}>{responsable}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Fecha -->
+                  <div class="col-md-2 mb-3">
+                    <input type="date" class="form-control" aria-label="Filtrar por fecha">
+                  </div>
+
+                  <!-- Botón Aplicar Filtros -->
+                  <div class="col-md-1 mb-3">
+                    <button type="button" class="btn btn-outline-primary w-100">
+                      <i class="bi bi-funnel-fill"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createPurchaseModal">
+                  <i class="bi bi-plus-circle-fill me-1"></i> Nueva Compra
+                </button>
+              </div>
+            </div>
+
+            <!-- Resumen de Compras -->
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3>$12,307.40</h3>
+                    <p>Compras Totales</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-cart-fill"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h3>2</h3>
+                    <p>Compras Recibidas</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-box-seam-fill"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                    <h3>2</h3>
+                    <p>Compras Pendientes</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-clock-history"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-danger">
+                  <div class="inner">
+                    <h3>1</h3>
+                    <p>Compras Canceladas</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-x-circle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Compras -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lista de Compras</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Proveedor</th>
+                      <th>Responsable</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Estado</th>
+                      <th>Método Pago</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {compras.map(compra => (
+                      <tr>
+                        <td>{compra.id}</td>
+                        <td>{compra.proveedor}</td>
+                        <td>{compra.responsable}</td>
+                        <td>{compra.fecha}</td>
+                        <td>${compra.total.toFixed(2)}</td>
+                        <td>
+                          <span class={`badge ${
+                            compra.estado === "Recibida" ? "text-bg-success" :
+                            compra.estado === "Pendiente" ? "text-bg-warning" :
+                            compra.estado === "En tránsito" ? "text-bg-info" :
+                            "text-bg-danger"
+                          }`}>
+                            {compra.estado}
+                          </span>
+                        </td>
+                        <td>
+                          <span class={`badge ${
+                            compra.metodo === "Transferencia" ? "text-bg-primary" :
+                            compra.metodo === "Efectivo" ? "text-bg-success" :
+                            compra.metodo === "Crédito" ? "text-bg-warning" :
+                            "text-bg-secondary"
+                          }`}>
+                            {compra.metodo}
+                          </span>
+                        </td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewPurchaseModal">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editPurchaseModal">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deletePurchaseModal">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#printOrderModal">
+                              <i class="bi bi-printer"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal Crear Compra -->
+      <div class="modal fade" id="createPurchaseModal" tabindex="-1" aria-labelledby="createPurchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createPurchaseModalLabel">Registrar Nueva Compra</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <!-- Información General -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información General</h6>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="purchaseProvider" class="form-label">Proveedor</label>
+                      <select class="form-select" id="purchaseProvider">
+                        <option selected disabled>Seleccionar proveedor...</option>
+                        <option>Distribuidora Tecnológica S.A.</option>
+                        <option>Suministros Oficina Express</option>
+                        <option>Importadora Global</option>
+                        <option>Papelería Industrial</option>
+                        <option>Equipos Médicos Salud Total</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="purchaseResponsable" class="form-label">Responsable</label>
+                      <select class="form-select" id="purchaseResponsable">
+                        {responsables.map(responsable => (
+                          <option value={responsable}>{responsable}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="purchaseDate" class="form-label">Fecha</label>
+                      <input type="date" class="form-control" id="purchaseDate">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="purchaseStatus" class="form-label">Estado</label>
+                      <select class="form-select" id="purchaseStatus">
+                        {estados.map(estado => (
+                          <option value={estado}>{estado}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Detalle de Productos -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Detalle de Productos</h6>
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Producto/Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody id="productosCompra">
+                          <tr>
+                            <td>
+                              <select class="form-select form-select-sm">
+                                <option selected disabled>Seleccionar producto...</option>
+                                <option>Cartuchos de tinta HP 664</option>
+                                <option>Resma papel carta</option>
+                                <option>Discos duros SSD 500GB</option>
+                              </select>
+                            </td>
+                            <td><input type="number" class="form-control form-control-sm" value="5"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="25.50"></td>
+                            <td>$127.50</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary">
+                      <i class="bi bi-plus-circle"></i> Agregar Producto
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Información de Pago -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información de Pago</h6>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="purchasePaymentMethod" class="form-label">Método de Pago</label>
+                      <select class="form-select" id="purchasePaymentMethod">
+                        {metodos.map(metodo => (
+                          <option value={metodo}>{metodo}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="purchaseReference" class="form-label">Referencia de Pago</label>
+                      <input type="text" class="form-control" id="purchaseReference" placeholder="Número de transacción, cheque, etc.">
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="mb-3">
+                      <label for="purchaseDeliveryDate" class="form-label">Fecha Estimada de Entrega</label>
+                      <input type="date" class="form-control" id="purchaseDeliveryDate">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="mb-3">
+                      <label for="purchaseNotes" class="form-label">Notas</label>
+                      <textarea class="form-control" id="purchaseNotes" rows="2"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="row mt-3">
+                  <div class="col-md-8">
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <div class="d-flex justify-content-between mb-2">
+                          <span>Subtotal:</span>
+                          <strong>$127.50</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                          <span>IVA (19%):</span>
+                          <strong>$24.23</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                          <span>Total:</span>
+                          <strong class="text-primary">$151.73</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Guardar Compra</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Ver Compra -->
+      <div class="modal fade" id="viewPurchaseModal" tabindex="-1" aria-labelledby="viewPurchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewPurchaseModalLabel">Detalles de la Compra #1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h6 class="border-bottom pb-2">Información General</h6>
+                  <p><strong>Proveedor:</strong> Distribuidora Tecnológica S.A.</p>
+                  <p><strong>Responsable:</strong> Laura Jimenez</p>
+                  <p><strong>Fecha:</strong> 2025-05-15</p>
+                  <p><strong>Estado:</strong> <span class="badge text-bg-success">Recibida</span></p>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="border-bottom pb-2">Información de Pago</h6>
+                  <p><strong>Método:</strong> <span class="badge text-bg-primary">Transferencia</span></p>
+                  <p><strong>Referencia:</strong> TRF-20250515-453</p>
+                  <p><strong>Fecha de Entrega:</strong> 2025-05-18</p>
+                </div>
+              </div>
+
+              <h6 class="border-bottom pb-2">Productos</h6>
+              <div class="table-responsive mb-4">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio Unit.</th>
+                      <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Discos duros SSD 500GB</td>
+                      <td>8</td>
+                      <td>$120.00</td>
+                      <td>$960.00</td>
+                    </tr>
+                    <tr>
+                      <td>Memorias RAM 16GB</td>
+                      <td>10</td>
+                      <td>$85.25</td>
+                      <td>$852.50</td>
+                    </tr>
+                    <tr>
+                      <td>Placas base ASUS</td>
+                      <td>5</td>
+                      <td>$250.00</td>
+                      <td>$1,250.00</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                      <td>$3,062.50</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>IVA (19%):</strong></td>
+                      <td>$581.88</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                      <td><strong>$3,644.38</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h6 class="border-bottom pb-2">Notas</h6>
+                  <p>Componentes para actualización de equipos del área de soporte técnico. Contactar al departamento de tecnología para validar recepción.</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary"><i class="bi bi-printer me-1"></i> Imprimir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar Compra -->
+      <div class="modal fade" id="editPurchaseModal" tabindex="-1" aria-labelledby="editPurchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editPurchaseModalLabel">Editar Compra #1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Similar al formulario de crear pero con datos precargados -->
+              <form>
+                <!-- Información General -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información General</h6>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editPurchaseProvider" class="form-label">Proveedor</label>
+                      <select class="form-select" id="editPurchaseProvider">
+                        <option>Distribuidora Tecnológica S.A.</option>
+                        <option>Suministros Oficina Express</option>
+                        <option>Importadora Global</option>
+                        <option>Papelería Industrial</option>
+                        <option>Equipos Médicos Salud Total</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editPurchaseResponsable" class="form-label">Responsable</label>
+                      <select class="form-select" id="editPurchaseResponsable">
+                        {responsables.map(responsable => (
+                          <option value={responsable} selected={responsable === "Laura Jimenez"}>{responsable}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editPurchaseDate" class="form-label">Fecha</label>
+                      <input type="date" class="form-control" id="editPurchaseDate" value="2025-05-15">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editPurchaseStatus" class="form-label">Estado</label>
+                      <select class="form-select" id="editPurchaseStatus">
+                        {estados.map(estado => (
+                          <option value={estado} selected={estado === "Recibida"}>{estado}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resto del formulario similar al de crear pero con datos precargados -->
+                <!-- ... -->
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning">Actualizar Compra</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Eliminar Compra -->
+      <div class="modal fade" id="deletePurchaseModal" tabindex="-1" aria-labelledby="deletePurchaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deletePurchaseModalLabel">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro que desea eliminar la compra <strong>#1</strong> a <strong>Distribuidora Tecnológica S.A.</strong> por <strong>$3,200.50</strong>?</p>
+              <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- Modal Imprimir Orden de Compra -->
+      <div class="modal fade" id="printOrderModal" tabindex="-1" aria-labelledby="printOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+    <h5 class="modal-title" id="printOrderModalLabel">Vista Previa de Orden de Compra</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="container p-4 border" id="printable-area">
+      <!-- Encabezado de la orden -->
+      <div class="row mb-4">
+        <div class="col-6">
+          <img src="/api/placeholder/200/50" alt="Logo de la empresa" class="img-fluid mb-2">
+          <h5>EMPRESA S.A.</h5>
+          <p class="mb-0">Calle Principal #123</p>
+          <p class="mb-0">Ciudad, País</p>
+          <p class="mb-0">Tel: (123) 456-7890</p>
+        </div>
+        <div class="col-6 text-end">
+        <h2 class="text-primary">ORDEN DE COMPRA</h2>
+        <p class="mb-0"><strong>Nº:</strong> OC-2025-0001</p>
+        <p class="mb-0"><strong>Fecha:</strong> 15/05/2025</p>
+        <p class="mb-0"><strong>Estado:</strong> <span class="badge text-bg-success">Recibida</span></p>
+      </div>
+    </div>
+
+    <!-- Información proveedor y responsable -->
+    <div class="row mb-4">
+      <div class="col-6">
+        <div class="border p-3">
+          <h6 class="border-bottom pb-2">PROVEEDOR</h6>
+          <p class="mb-0"><strong>Nombre:</strong> Distribuidora Tecnológica S.A.</p>
+          <p class="mb-0"><strong>RUT/ID:</strong> 12.345.678-9</p>
+          <p class="mb-0"><strong>Dirección:</strong> Av. Tecnológica 456, Ciudad</p>
+          <p class="mb-0"><strong>Contacto:</strong> contacto@distribuidora.com</p>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="border p-3">
+          <h6 class="border-bottom pb-2">ENTREGA</h6>
+          <p class="mb-0"><strong>Responsable:</strong> Laura Jimenez</p>
+          <p class="mb-0"><strong>Departamento:</strong> Tecnología</p>
+          <p class="mb-0"><strong>Fecha estimada:</strong> 18/05/2025</p>
+          <p class="mb-0"><strong>Forma de pago:</strong> Transferencia</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="border-bottom pb-2">DETALLE DE PRODUCTOS</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered table-sm">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio Unit.</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Discos duros SSD 500GB</td>
+                <td class="text-center">8</td>
+                <td class="text-end">$120.00</td>
+                <td class="text-end">$960.00</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Memorias RAM 16GB</td>
+                <td class="text-center">10</td>
+                <td class="text-end">$85.25</td>
+                <td class="text-end">$852.50</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Placas base ASUS</td>
+                <td class="text-center">5</td>
+                <td class="text-end">$250.00</td>
+                <td class="text-end">$1,250.00</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
+                <td class="text-end">$3,062.50</td>
+              </tr>
+              <tr>
+                <td colspan="4" class="text-end"><strong>IVA (19%):</strong></td>
+                <td class="text-end">$581.88</td>
+              </tr>
+              <tr>
+                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                <td class="text-end"><strong>$3,644.38</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notas y firmas -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="border-bottom pb-2">NOTAS</h6>
+        <p>Componentes para actualización de equipos del área de soporte técnico. Contactar al departamento de tecnología para validar recepción.</p>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <div class="col-4 text-center">
+        <div class="border-top pt-2">
+          <p>Autorizado por</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="border-top pt-2">
+          <p>Responsable compras</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="border-top pt-2">
+          <p>Proveedor</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+  <button type="button" class="btn btn-primary" id="printOrderBtn"><i class="bi bi-printer me-1"></i> Imprimir</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Modal para Reporte de Compras -->
+<div class="modal fade" id="reportPurchasesModal" tabindex="-1" aria-labelledby="reportPurchasesModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="reportPurchasesModalLabel">Generar Reporte de Compras</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="reportStartDate" class="form-label">Fecha Inicio</label>
+              <input type="date" class="form-control" id="reportStartDate">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="reportEndDate" class="form-label">Fecha Fin</label>
+              <input type="date" class="form-control" id="reportEndDate">
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="reportProvider" class="form-label">Proveedor</label>
+          <select class="form-select" id="reportProvider">
+            <option selected value="">Todos los proveedores</option>
+            <option>Distribuidora Tecnológica S.A.</option>
+            <option>Suministros Oficina Express</option>
+            <option>Importadora Global</option>
+            <option>Papelería Industrial</option>
+            <option>Equipos Médicos Salud Total</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="reportStatus" class="form-label">Estado</label>
+          <select class="form-select" id="reportStatus">
+            <option selected value="">Todos los estados</option>
+            <option>Recibida</option>
+            <option>Pendiente</option>
+            <option>Cancelada</option>
+            <option>En tránsito</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Formato</label>
+          <div class="d-flex gap-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="reportFormat" id="formatPDF" checked>
+              <label class="form-check-label" for="formatPDF">
+                PDF
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="reportFormat" id="formatExcel">
+              <label class="form-check-label" for="formatExcel">
+                Excel
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="reportFormat" id="formatCSV">
+              <label class="form-check-label" for="formatCSV">
+                CSV
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Incluir</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="includeDetails" checked>
+            <label class="form-check-label" for="includeDetails">
+              Detalles de productos
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="includePayments" checked>
+            <label class="form-check-label" for="includePayments">
+              Información de pagos
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="includeGraph">
+            <label class="form-check-label" for="includeGraph">
+              Gráficos estadísticos
+            </label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <button type="button" class="btn btn-success"><i class="bi bi-file-earmark-arrow-down me-1"></i> Generar Reporte</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal para Importar Compras -->
+<div class="modal fade" id="importPurchasesModal" tabindex="-1" aria-labelledby="importPurchasesModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="importPurchasesModalLabel">Importar Compras</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p>Importe datos de compras desde archivos Excel o CSV.</p>
+
+      <div class="mb-4">
+        <label for="importFile" class="form-label">Seleccionar archivo</label>
+        <input class="form-control" type="file" id="importFile">
+        <small class="text-muted">Formatos permitidos: .xlsx, .xls, .csv</small>
+      </div>
+
+      <div class="alert alert-info">
+        <h6 class="alert-heading"><i class="bi bi-info-circle"></i> Instrucciones</h6>
+        <p class="mb-0">El archivo debe contener las siguientes columnas: Proveedor, Responsable, Fecha, Total, Estado, Método de Pago.</p>
+        <hr>
+        <p class="mb-0">Descargue nuestra <a href="#" class="alert-link">plantilla</a> para asegurar la compatibilidad.</p>
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="overwriteData">
+        <label class="form-check-label" for="overwriteData">
+          Sobrescribir datos existentes con el mismo ID
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      <button type="button" class="btn btn-primary"><i class="bi bi-upload me-1"></i> Importar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Fin de la aplicación -->
+<Footer path={path} />
+</div>
+<!--end::App Wrapper-->
+
+<!-- Scripts -->
+<Scripts path={path} />
+
+<script>
+// Script para la funcionalidad de impresión
+document.addEventListener('DOMContentLoaded', function() {
+  const printOrderBtn = document.getElementById('printOrderBtn');
+  if (printOrderBtn) {
+    printOrderBtn.addEventListener('click', function() {
+      const printableArea = document.getElementById('printable-area');
+      if (printableArea) {
+        const printContents = printableArea.innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = `
+          <div style="padding: 20px;">
+            ${printContents}
+          </div>
+        `;
+
+        window.print();
+        document.body.innerHTML = originalContents;
+
+        // Reiniciar los event listeners después de restaurar
+        setTimeout(() => {
+          location.reload();
+        }, 100);
+      }
+    });
+  }
+
+  // Cálculo automático de subtotales en el formulario de compra
+  function calcularTotales() {
+    const filas = document.querySelectorAll('#productosCompra tr');
+    let subtotal = 0;
+
+    filas.forEach(fila => {
+      const cantidadInput = fila.querySelector('input[type="number"]:nth-of-type(1)') as HTMLInputElement;
+      const precioInput = fila.querySelector('input[type="number"]:nth-of-type(2)') as HTMLInputElement;
+      const subtotalCell = fila.querySelector('td:nth-child(4)');
+
+      if (cantidadInput && precioInput && subtotalCell) {
+        const cantidad = parseFloat(cantidadInput.value) || 0;
+        const precio = parseFloat(precioInput.value) || 0;
+        const subtotalProducto = cantidad * precio;
+
+        subtotalCell.textContent = '$' + subtotalProducto.toFixed(2);
+        subtotal += subtotalProducto;
+      }
+    });
+
+    const iva = subtotal * 0.19;
+    const total = subtotal + iva;
+
+    const resumenSubtotal = document.querySelector('.card-body .d-flex:nth-child(1) strong');
+    const resumenIva = document.querySelector('.card-body .d-flex:nth-child(2) strong');
+    const resumenTotal = document.querySelector('.card-body .d-flex:nth-child(3) strong');
+
+    if (resumenSubtotal && resumenIva && resumenTotal) {
+      resumenSubtotal.textContent = '$' + subtotal.toFixed(2);
+      resumenIva.textContent = '$' + iva.toFixed(2);
+      resumenTotal.textContent = '$' + total.toFixed(2);
+    }
+  }
+
+  // Añadir evento para recalcular cuando cambian los valores
+  const inputsProductos = document.querySelectorAll('#productosCompra input[type="number"]');
+  if (inputsProductos) {
+    inputsProductos.forEach(input => {
+      input.addEventListener('change', calcularTotales);
+    });
+  }
+
+  // Funcionalidad para agregar nueva fila de producto
+  const btnAgregarProducto = document.querySelector('.btn-primary:has(.bi-plus-circle)');
+  if (btnAgregarProducto) {
+    btnAgregarProducto.addEventListener('click', function() {
+      const tbody = document.getElementById('productosCompra');
+      if (tbody) {
+        const nuevaFila = document.createElement('tr');
+        nuevaFila.innerHTML = `
+          <td>
+            <select class="form-select form-select-sm">
+              <option selected disabled>Seleccionar producto...</option>
+              <option>Cartuchos de tinta HP 664</option>
+              <option>Resma papel carta</option>
+              <option>Discos duros SSD 500GB</option>
+            </select>
+          </td>
+          <td><input type="number" class="form-control form-control-sm" value="1"></td>
+          <td><input type="number" class="form-control form-control-sm" value="0.00"></td>
+          <td>$0.00</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(nuevaFila);
+
+        // Añadir eventos a los nuevos campos
+        const nuevosInputs = nuevaFila.querySelectorAll('input[type="number"]');
+        nuevosInputs.forEach(input => {
+          input.addEventListener('change', calcularTotales);
+        });
+
+        // Añadir evento al botón de eliminar
+        const btnEliminar = nuevaFila.querySelector('.btn-danger');
+        if (btnEliminar) {
+          btnEliminar.addEventListener('click', function() {
+            nuevaFila.remove();
+            calcularTotales();
+          });
+        }
+      }
+    });
+  }
+
+  // Agregar funcionalidad a los botones de eliminar existentes
+  const botonesEliminar = document.querySelectorAll('#productosCompra .btn-danger');
+  if (botonesEliminar) {
+    botonesEliminar.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const fila = this.closest('tr');
+        if (fila) {
+          fila.remove();
+          calcularTotales();
+        }
+      });
+    });
+  }
+
+  // Funcionalidad para filtros rápidos
+  const filtroEstado = document.querySelector('select[aria-label="Filtrar por estado"]') as HTMLSelectElement;
+  const filtroMetodo = document.querySelector('select[aria-label="Filtrar por método"]') as HTMLSelectElement;
+  const filtroResponsable = document.querySelector('select[aria-label="Filtrar por responsable"]') as HTMLSelectElement;
+  const filtroFecha = document.querySelector('input[aria-label="Filtrar por fecha"]') as HTMLInputElement;
+  const btnFiltrar = document.querySelector('.btn-outline-primary:has(.bi-funnel-fill)');
+
+  if (btnFiltrar && filtroEstado && filtroMetodo && filtroResponsable && filtroFecha) {
+    btnFiltrar.addEventListener('click', function() {
+      alert('Aplicando filtros (simulación):\n' +
+            'Estado: ' + (filtroEstado.value === 'Todos los estados' ? 'Todos' : filtroEstado.value) + '\n' +
+            'Método: ' + (filtroMetodo.value === 'Todos los métodos' ? 'Todos' : filtroMetodo.value) + '\n' +
+            'Responsable: ' + (filtroResponsable.value === 'Todos los responsables' ? 'Todos' : filtroResponsable.value) + '\n' +
+            'Fecha: ' + (filtroFecha.value || 'No seleccionada'));
+    });
+  }
+});
+</script>
+</body>
+</html>

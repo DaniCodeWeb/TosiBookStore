@@ -1,0 +1,777 @@
+---
+import Head from "../../../components/admin/_head.astro"
+import Footer from "../../../components/admin/dashboard/_footer.astro";
+import Topbar from "../../../components/admin/dashboard/_topbar.astro";
+import Sidenav from "../../../components/admin/dashboard/_sidenav.astro";
+import Scripts from "../../../components/admin/_scripts.astro";
+
+const title = "Gestión de Ventas";
+const path = "../../../dist";
+const mainPage = "ventas";
+const page = "lista";
+
+// Simulated sales data - in a real app, you would fetch this from an API or database
+const ventas = [
+  {
+    id: 1,
+    cliente: "Electrónica Moderna S.A.",
+    vendedor: "Carlos Martinez",
+    fecha: "2025-05-18",
+    total: 2450.75,
+    estado: "Completada",
+    metodo: "Transferencia"
+  },
+  {
+    id: 2,
+    cliente: "Restaurante La Buena Mesa",
+    vendedor: "María Rodriguez",
+    fecha: "2025-05-19",
+    total: 875.30,
+    estado: "Pendiente",
+    metodo: "Efectivo"
+  },
+  {
+    id: 3,
+    cliente: "Gimnasio Fitness Plus",
+    vendedor: "Juan Perez",
+    fecha: "2025-05-17",
+    total: 1250.00,
+    estado: "Cancelada",
+    metodo: "Tarjeta"
+  },
+  {
+    id: 4,
+    cliente: "Distribuidora Pacífico",
+    vendedor: "Ana Lopez",
+    fecha: "2025-05-16",
+    total: 3800.50,
+    estado: "Completada",
+    metodo: "Transferencia"
+  },
+  {
+    id: 5,
+    cliente: "Farmacia San José",
+    vendedor: "Diego Sanchez",
+    fecha: "2025-05-15",
+    total: 980.25,
+    estado: "Pendiente",
+    metodo: "Tarjeta"
+  }
+];
+
+// Filter options
+const estados = ["Completada", "Pendiente", "Cancelada"];
+const metodos = ["Transferencia", "Efectivo", "Tarjeta", "Cheque"];
+const vendedores = ["Carlos Martinez", "María Rodriguez", "Juan Perez", "Ana Lopez", "Diego Sanchez"];
+---
+
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <Head title={title} path={path} />
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <Topbar path={path} />
+      <Sidenav path={path} mainPage={mainPage} page={page} />
+
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Gestión de Ventas</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Ventas</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Lista de ventas
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+
+        <!--begin::App Content-->
+        <div class="app-content">
+          <!--begin::Container-->
+          <div class="container-fluid">
+
+            <!-- Filtros y Botón Crear -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <!-- Búsqueda -->
+                  <div class="col-md-3 mb-3">
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Buscar venta..." aria-label="Buscar venta">
+                      <button class="btn btn-primary" type="button">
+                        <i class="bi bi-search"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por estado">
+                      <option selected>Todos los estados</option>
+                      {estados.map(estado => (
+                        <option value={estado}>{estado}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Método de Pago -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por método">
+                      <option selected>Todos los métodos</option>
+                      {metodos.map(metodo => (
+                        <option value={metodo}>{metodo}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Vendedor -->
+                  <div class="col-md-2 mb-3">
+                    <select class="form-select" aria-label="Filtrar por vendedor">
+                      <option selected>Todos los vendedores</option>
+                      {vendedores.map(vendedor => (
+                        <option value={vendedor}>{vendedor}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <!-- Filtro Fecha -->
+                  <div class="col-md-2 mb-3">
+                    <input type="date" class="form-control" aria-label="Filtrar por fecha">
+                  </div>
+
+                  <!-- Botón Aplicar Filtros -->
+                  <div class="col-md-1 mb-3">
+                    <button type="button" class="btn btn-outline-primary w-100">
+                      <i class="bi bi-funnel-fill"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer text-end">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createSaleModal">
+                  <i class="bi bi-plus-circle-fill me-1"></i> Nueva Venta
+                </button>
+              </div>
+            </div>
+
+            <!-- Resumen de Ventas -->
+            <div class="row mb-4">
+              <div class="col-md-3">
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3>$9,356.80</h3>
+                    <p>Ventas Totales</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-cash-stack"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h3>2</h3>
+                    <p>Ventas Completadas</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-check-circle"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                    <h3>2</h3>
+                    <p>Ventas Pendientes</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-clock-history"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="small-box bg-danger">
+                  <div class="inner">
+                    <h3>1</h3>
+                    <p>Ventas Canceladas</p>
+                  </div>
+                  <div class="icon">
+                    <i class="bi bi-x-circle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Ventas -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lista de Ventas</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Cliente</th>
+                      <th>Vendedor</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Estado</th>
+                      <th>Método Pago</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ventas.map(venta => (
+                      <tr>
+                        <td>{venta.id}</td>
+                        <td>{venta.cliente}</td>
+                        <td>{venta.vendedor}</td>
+                        <td>{venta.fecha}</td>
+                        <td>${venta.total.toFixed(2)}</td>
+                        <td>
+                          <span class={`badge ${
+                            venta.estado === "Completada" ? "text-bg-success" :
+                            venta.estado === "Pendiente" ? "text-bg-warning" :
+                            "text-bg-danger"
+                          }`}>
+                            {venta.estado}
+                          </span>
+                        </td>
+                        <td>
+                          <span class={`badge ${
+                            venta.metodo === "Transferencia" ? "text-bg-primary" :
+                            venta.metodo === "Efectivo" ? "text-bg-success" :
+                            venta.metodo === "Tarjeta" ? "text-bg-info" :
+                            "text-bg-secondary"
+                          }`}>
+                            {venta.metodo}
+                          </span>
+                        </td>
+                        <td>
+                          <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#viewSaleModal">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editSaleModal">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSaleModal">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#printInvoiceModal">
+                              <i class="bi bi-printer"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-end">
+                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal Crear Venta -->
+      <div class="modal fade" id="createSaleModal" tabindex="-1" aria-labelledby="createSaleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createSaleModalLabel">Registrar Nueva Venta</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <!-- Información General -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información General</h6>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saleClient" class="form-label">Cliente</label>
+                      <select class="form-select" id="saleClient">
+                        <option selected disabled>Seleccionar cliente...</option>
+                        <option>Electrónica Moderna S.A.</option>
+                        <option>Restaurante La Buena Mesa</option>
+                        <option>Gimnasio Fitness Plus</option>
+                        <option>Distribuidora Pacífico</option>
+                        <option>Farmacia San José</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saleVendedor" class="form-label">Vendedor</label>
+                      <select class="form-select" id="saleVendedor">
+                        {vendedores.map(vendedor => (
+                          <option value={vendedor}>{vendedor}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saleDate" class="form-label">Fecha</label>
+                      <input type="date" class="form-control" id="saleDate">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saleStatus" class="form-label">Estado</label>
+                      <select class="form-select" id="saleStatus">
+                        {estados.map(estado => (
+                          <option value={estado}>{estado}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Detalle de Productos -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Detalle de Productos</h6>
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody id="productosVenta">
+                          <tr>
+                            <td>
+                              <select class="form-select form-select-sm">
+                                <option selected disabled>Seleccionar producto...</option>
+                                <option>Laptop HP ProBook</option>
+                                <option>Monitor Samsung 24"</option>
+                                <option>Teclado Mecánico RGB</option>
+                              </select>
+                            </td>
+                            <td><input type="number" class="form-control form-control-sm" value="1"></td>
+                            <td><input type="number" class="form-control form-control-sm" value="850.00"></td>
+                            <td>$850.00</td>
+                            <td>
+                              <button type="button" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary">
+                      <i class="bi bi-plus-circle"></i> Agregar Producto
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Información de Pago -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información de Pago</h6>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="salePaymentMethod" class="form-label">Método de Pago</label>
+                      <select class="form-select" id="salePaymentMethod">
+                        {metodos.map(metodo => (
+                          <option value={metodo}>{metodo}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="saleReference" class="form-label">Referencia de Pago</label>
+                      <input type="text" class="form-control" id="saleReference" placeholder="Número de transacción, cheque, etc.">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="mb-3">
+                      <label for="saleNotes" class="form-label">Notas</label>
+                      <textarea class="form-control" id="saleNotes" rows="2"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="row mt-3">
+                  <div class="col-md-8">
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card bg-light">
+                      <div class="card-body p-2">
+                        <div class="d-flex justify-content-between mb-2">
+                          <span>Subtotal:</span>
+                          <strong>$850.00</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                          <span>IVA (19%):</span>
+                          <strong>$161.50</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                          <span>Total:</span>
+                          <strong class="text-primary">$1,011.50</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Guardar Venta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Ver Venta -->
+      <div class="modal fade" id="viewSaleModal" tabindex="-1" aria-labelledby="viewSaleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewSaleModalLabel">Detalles de la Venta #1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <h6 class="border-bottom pb-2">Información General</h6>
+                  <p><strong>Cliente:</strong> Electrónica Moderna S.A.</p>
+                  <p><strong>Vendedor:</strong> Carlos Martinez</p>
+                  <p><strong>Fecha:</strong> 2025-05-18</p>
+                  <p><strong>Estado:</strong> <span class="badge text-bg-success">Completada</span></p>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="border-bottom pb-2">Información de Pago</h6>
+                  <p><strong>Método:</strong> <span class="badge text-bg-primary">Transferencia</span></p>
+                  <p><strong>Referencia:</strong> TRF-25052023-789</p>
+                  <p><strong>Fecha de Pago:</strong> 2025-05-18</p>
+                </div>
+              </div>
+
+              <h6 class="border-bottom pb-2">Productos</h6>
+              <div class="table-responsive mb-4">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio Unit.</th>
+                      <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Laptop HP ProBook</td>
+                      <td>2</td>
+                      <td>$850.00</td>
+                      <td>$1,700.00</td>
+                    </tr>
+                    <tr>
+                      <td>Monitor Samsung 24"</td>
+                      <td>3</td>
+                      <td>$250.25</td>
+                      <td>$750.75</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                      <td>$2,450.75</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>IVA (19%):</strong></td>
+                      <td>$465.64</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                      <td><strong>$2,916.39</strong></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <h6 class="border-bottom pb-2">Notas</h6>
+                  <p>Cliente requiere entrega en sus oficinas centrales. Contactar a Juan Mendez (Depto. de Compras) al llegar.</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary"><i class="bi bi-printer me-1"></i> Imprimir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Editar Venta -->
+      <div class="modal fade" id="editSaleModal" tabindex="-1" aria-labelledby="editSaleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editSaleModalLabel">Editar Venta #1</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Similar al formulario de crear pero con datos precargados -->
+              <form>
+                <!-- Información General -->
+                <div class="row mb-4">
+                  <div class="col-md-12">
+                    <h6 class="border-bottom pb-2">Información General</h6>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editSaleClient" class="form-label">Cliente</label>
+                      <select class="form-select" id="editSaleClient">
+                        <option>Electrónica Moderna S.A.</option>
+                        <option>Restaurante La Buena Mesa</option>
+                        <option>Gimnasio Fitness Plus</option>
+                        <option>Distribuidora Pacífico</option>
+                        <option>Farmacia San José</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editSaleVendedor" class="form-label">Vendedor</label>
+                      <select class="form-select" id="editSaleVendedor">
+                        {vendedores.map(vendedor => (
+                          <option value={vendedor} selected={vendedor === "Carlos Martinez"}>{vendedor}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editSaleDate" class="form-label">Fecha</label>
+                      <input type="date" class="form-control" id="editSaleDate" value="2025-05-18">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="editSaleStatus" class="form-label">Estado</label>
+                      <select class="form-select" id="editSaleStatus">
+                        {estados.map(estado => (
+                          <option value={estado} selected={estado === "Completada"}>{estado}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Resto del formulario similar al de crear pero con datos precargados -->
+                <!-- ... -->
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning">Actualizar Venta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Eliminar Venta -->
+      <div class="modal fade" id="deleteSaleModal" tabindex="-1" aria-labelledby="deleteSaleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deleteSaleModalLabel">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro que desea eliminar la venta <strong>#1</strong> de <strong>Electrónica Moderna S.A.</strong> por <strong>$2,450.75</strong>?</p>
+              <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Imprimir Factura -->
+      <div class="modal fade" id="printInvoiceModal" tabindex="-1" aria-labelledby="printInvoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="printInvoiceModalLabel">Vista previa de Factura</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="container mt-5">
+                <div class="row">
+                  <div class="col-12 text-center mb-4">
+                    <h4>FACTURA</h4>
+                    <p class="mb-0">Tu Empresa S.A.</p>
+                    <p class="mb-0">Calle Principal #123, Ciudad</p>
+                    <p>RUT: 12.345.678-9</p>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <h6 class="border-bottom pb-2">Cliente</h6>
+                    <p class="mb-0"><strong>Nombre:</strong> Electrónica Moderna S.A.</p>
+                    <p class="mb-0"><strong>RUT:</strong> 96.789.456-3</p>
+                    <p class="mb-0"><strong>Dirección:</strong> Av. Comercial 453, Ciudad</p>
+                    <p><strong>Email:</strong> compras@electronicamoderna.com</p>
+                  </div>
+                  <div class="col-md-6 text-end">
+                    <h6 class="border-bottom pb-2">Detalles de Factura</h6>
+                    <p class="mb-0"><strong>Factura N°:</strong> 001-F00045</p>
+                    <p class="mb-0"><strong>Fecha:</strong> 18-05-2025</p>
+                    <p class="mb-0"><strong>Vendedor:</strong> Carlos Martinez</p>
+                    <p><strong>Método de Pago:</strong> Transferencia</p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <table class="table table-bordered">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Descripción</th>
+                          <th>Cant.</th>
+                          <th>Precio Unit.</th>
+                          <th>Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Laptop HP ProBook</td>
+                          <td>2</td>
+                          <td>$850.00</td>
+                          <td>$1,700.00</td>
+                        </tr>
+                        <tr>
+                          <td>Monitor Samsung 24"</td>
+                          <td>3</td>
+                          <td>$250.25</td>
+                          <td>$750.75</td>
+                        </tr>
+                        <tr>
+                          <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                          <td>$2,450.75</td>
+                        </tr>
+                        <tr>
+                          <td colspan="3" class="text-end"><strong>IVA (19%):</strong></td>
+                          <td>$465.64</td>
+                        </tr>
+                        <tr>
+                          <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                          <td><strong>$2,916.39</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row mt-4">
+                  <div class="col-md-8">
+                    <h6 class="border-bottom pb-2">Notas</h6>
+                    <p>Cliente requiere entrega en sus oficinas centrales. Contactar a Juan Mendez (Depto. de Compras) al llegar.</p>
+                  </div>
+                  <div class="col-md-4 text-center">
+                    <div class="border-top pt-2 mt-5">
+                      <p>Firma y Sello</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary"><i class="bi bi-printer me-1"></i> Imprimir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+    <!--end::App Wrapper-->
+
+    <!--begin::Script-->
+    <Scripts path={path} />
+
+    <!-- Script adicional para la gestión de ventas -->
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Aquí puedes añadir la lógica para calcular totales, agregar/eliminar productos, etc.
+        // Ejemplo: Actualizar totales al cambiar cantidades o precios
+
+        // Función para actualizar subtotales en formulario de venta
+        function actualizarSubtotales() {
+          // Implementación según necesidades
+          console.log('Actualizando subtotales...');
+        }
+
+        // Inicializar eventos
+        const inputsCantidad = document.querySelectorAll('input[type="number"]');
+        if (inputsCantidad) {
+          inputsCantidad.forEach(input => {
+            input.addEventListener('change', actualizarSubtotales);
+          });
+        }
+      });
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>
