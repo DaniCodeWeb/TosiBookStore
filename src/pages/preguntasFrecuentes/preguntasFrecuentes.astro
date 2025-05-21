@@ -1,0 +1,240 @@
+---
+import MainLayout from '../../layouts/lading/MainLayout.astro';
+
+// Datos de preguntas frecuentes
+const faqs = [
+  {
+    category: "Pedidos y Compras",
+    questions: [
+      {
+        question: "¿Cómo puedo realizar un pedido?",
+        answer: "Puedes realizar un pedido navegando por nuestra tienda, seleccionando los productos que deseas y agregándolos al carrito. Una vez que hayas terminado de seleccionar, ve al carrito, revisa tu pedido y procede al pago siguiendo las instrucciones en pantalla."
+      },
+      {
+        question: "¿Qué métodos de pago aceptan?",
+        answer: "Aceptamos tarjetas de crédito y débito (Visa, MasterCard, American Express), PayPal, transferencias bancarias y pago en efectivo en puntos autorizados."
+      },
+      {
+        question: "¿Es seguro comprar en su sitio?",
+        answer: "Sí, todas nuestras transacciones están protegidas con encriptación SSL de 256 bits. Además, no almacenamos los datos de tus tarjetas de crédito en nuestros servidores."
+      },
+      {
+        question: "¿Puedo modificar o cancelar mi pedido?",
+        answer: "Puedes modificar o cancelar tu pedido dentro de las 2 horas posteriores a la compra, siempre y cuando no haya sido procesado. Para hacerlo, contacta a nuestro servicio al cliente."
+      }
+    ]
+  },
+  {
+    category: "Envíos y Entregas",
+    questions: [
+      {
+        question: "¿Cuánto tarda en llegar mi pedido?",
+        answer: "Los tiempos de entrega varían según tu ubicación. En la Ciudad Principal, la entrega toma 24-48 horas. Para Ciudades Secundarias, de 2 a 3 días. En Zonas Rurales, de 3 a 5 días hábiles."
+      },
+      {
+        question: "¿Cómo puedo rastrear mi pedido?",
+        answer: "Una vez que tu pedido haya sido enviado, recibirás un correo electrónico con el número de seguimiento. Puedes utilizar este número en la sección 'Rastrear Pedido' de nuestra web o directamente en el sitio de la empresa de mensajería."
+      },
+      {
+        question: "¿Realizan envíos internacionales?",
+        answer: "Sí, realizamos envíos internacionales a la mayoría de los países. Los costos y tiempos de entrega varían según la ubicación. Puedes consultar las tarifas durante el proceso de compra."
+      }
+    ]
+  },
+  {
+    category: "Devoluciones y Reembolsos",
+    questions: [
+      {
+        question: "¿Cuál es su política de devoluciones?",
+        answer: "Aceptamos devoluciones dentro de los 30 días posteriores a la recepción del producto, siempre que esté en perfectas condiciones, sin uso y con todas sus etiquetas y embalaje original."
+      },
+      {
+        question: "¿Cómo solicito una devolución?",
+        answer: "Para solicitar una devolución, debes contactar a nuestro servicio al cliente proporcionando tu número de pedido y el motivo de la devolución. Te enviaremos las instrucciones para procesar tu solicitud."
+      },
+      {
+        question: "¿Cuánto tiempo tarda en procesarse mi reembolso?",
+        answer: "Una vez recibido y verificado el producto devuelto, el reembolso se procesa en un plazo de 5 a 10 días hábiles, dependiendo de tu método de pago. Los reembolsos en tarjeta de crédito pueden tardar hasta 2 ciclos de facturación en reflejarse."
+      }
+    ]
+  },
+  {
+    category: "Productos y Catálogo",
+    questions: [
+      {
+        question: "¿Cómo sé si un producto está disponible?",
+        answer: "En la página de cada producto se muestra la disponibilidad actual. Si un producto está agotado, puedes registrarte para recibir una notificación cuando vuelva a estar disponible."
+      },
+      {
+        question: "¿Puedo solicitar un producto que no está en el catálogo?",
+        answer: "Sí, aceptamos solicitudes especiales. Contáctanos con los detalles del producto que buscas y haremos lo posible por conseguirlo para ti."
+      },
+      {
+        question: "¿Los precios incluyen impuestos?",
+        answer: "Sí, todos nuestros precios incluyen IVA y demás impuestos aplicables. En el resumen del pedido podrás ver el desglose completo."
+      }
+    ]
+  },
+  {
+    category: "Cuenta y Privacidad",
+    questions: [
+      {
+        question: "¿Necesito crear una cuenta para comprar?",
+        answer: "No es obligatorio, puedes realizar compras como invitado. Sin embargo, crear una cuenta te permite acceder a tu historial de pedidos, guardar direcciones y agilizar futuras compras."
+      },
+      {
+        question: "¿Cómo puedo cambiar mi contraseña o información personal?",
+        answer: "Puedes modificar tu información personal iniciando sesión en tu cuenta y accediendo a la sección 'Mi Perfil'. Allí encontrarás opciones para actualizar tus datos y cambiar tu contraseña."
+      },
+      {
+        question: "¿Qué hacen con mi información personal?",
+        answer: "Respetamos tu privacidad y solo utilizamos tu información para procesar tus pedidos y mejorar tu experiencia de compra. No compartimos tus datos con terceros sin tu consentimiento. Puedes consultar nuestra Política de Privacidad para más detalles."
+      }
+    ]
+  }
+];
+---
+
+<MainLayout title="Preguntas Frecuentes">
+  <section class="py-12 px-4 bg-gray-50">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Preguntas Frecuentes</h1>
+
+      <!-- Card principal de FAQs (90% del contenido) -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden w-11/12 mx-auto mb-12">
+        <div class="p-6 md:p-8">
+          <div class="max-w-3xl mx-auto">
+            <p class="text-gray-600 text-center mb-8">
+              Encuentra respuestas a las preguntas más comunes sobre nuestros productos, pedidos, envíos y más. Si no encuentras lo que buscas, no dudes en contactarnos.
+            </p>
+
+            <!-- Búsqueda de FAQs -->
+            <div class="mb-10">
+              <div class="relative max-w-lg mx-auto">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="faq-search"
+                  placeholder="Buscar pregunta..."
+                  class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <!-- Navegación de categorías -->
+            <div class="mb-8">
+              <div class="flex flex-wrap justify-center gap-2">
+                {faqs.map((category, index) => (
+                  <button
+                    class="px-4 py-2 rounded-full bg-purple-100 text-purple-700 font-medium text-sm hover:bg-purple-200 transition-colors"
+                    data-category-index={index}
+                  >
+                    {category.category}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido de FAQs por categoría -->
+      <div class="max-w-4xl mx-auto">
+        {faqs.map((category, categoryIndex) => (
+          <div id={`category-${categoryIndex}`} class="mb-10">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+              <span class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3 text-lg">
+                {categoryIndex + 1}
+              </span>
+              {category.category}
+            </h2>
+
+            <div class="space-y-4">
+              {category.questions.map((faq, faqIndex) => (
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                  <details class="group">
+                    <summary class="flex justify-between items-center p-5 cursor-pointer">
+                      <h3 class="text-lg font-medium text-gray-800">{faq.question}</h3>
+                      <span class="text-purple-500 group-open:rotate-180 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="px-5 pb-5 pt-0">
+                      <p class="text-gray-600">{faq.answer}</p>
+                    </div>
+                  </details>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Sección de contacto -->
+      <div class="max-w-3xl mx-auto mt-12 text-center">
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">¿No encontraste lo que buscabas?</h2>
+        <p class="text-gray-600 mb-6">Nuestro equipo de atención al cliente está listo para ayudarte con cualquier pregunta adicional que puedas tener.</p>
+        <a href="/contacto" class="inline-flex items-center px-6 py-3 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors">
+          Contáctanos
+          <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Script para filtrar preguntas por búsqueda
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('faq-search');
+      const allQuestions = document.querySelectorAll('details');
+
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const target = e.target as HTMLInputElement;
+          const searchTerm = target.value.toLowerCase();
+
+          allQuestions.forEach(question => {
+            const questionTitle = question.querySelector('h3');
+            const questionAnswer = question.querySelector('p');
+
+            if (questionTitle && questionAnswer && question.parentElement) {
+              const questionText = questionTitle.textContent?.toLowerCase() || '';
+              const answerText = questionAnswer.textContent?.toLowerCase() || '';
+
+              if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                question.parentElement.style.display = 'block';
+                // Abrir la pregunta si coincide con la búsqueda
+                if (searchTerm.length > 2) {
+                  question.open = true;
+                }
+              } else {
+                question.parentElement.style.display = 'none';
+              }
+            }
+          });
+        });
+      }
+
+      // Navegación por categorías
+      const categoryButtons = document.querySelectorAll('[data-category-index]');
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const categoryIndex = button.getAttribute('data-category-index');
+          const categorySection = document.getElementById(`category-${categoryIndex}`);
+
+          if (categorySection) {
+            categorySection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    });
+  </script>
+</MainLayout>

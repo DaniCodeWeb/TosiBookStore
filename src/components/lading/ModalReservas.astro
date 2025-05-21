@@ -1,0 +1,287 @@
+---
+// ModalReservas.astro
+---
+
+<!-- Modal de Reserva -->
+<div id="reserva-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+  <!-- Overlay de fondo oscuro -->
+  <div class="absolute inset-0 bg-black bg-opacity-80" id="reserva-modal-overlay"></div>
+
+  <!-- Modal -->
+  <div class="relative bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-4xl mx-4 flex flex-col md:flex-row opacity-90 transform scale-95 opacity-0 transition-all duration-300">
+    <!-- Botón de cerrar -->
+    <button id="close-reserva-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Lado izquierdo - Formulario de Reserva -->
+    <div class="w-full md:w-1/2 p-8 bg-gradient-to-b from-gray-400 via-blue-500 to-yellow-400">
+      <div class="flex justify-center mb-6">
+        <img src="/src/assets/img/Tosilogo1.png" alt="TOSI" class="h-12" >
+      </div>
+
+      <div class="text-center mb-6">
+        <h3 class="text-xl font-bold text-gray-800">Reserva tu Libro</h3>
+        <p class="text-gray-700 mt-2">
+          Asegura tu copia en preventa con un depósito mínimo
+        </p>
+      </div>
+
+      <form class="space-y-5">
+        <!-- Información del libro (autocompletada desde la selección) -->
+        <div class="bg-white p-4 rounded-md mb-4">
+          <h4 class="font-medium text-gray-800 mb-2">Libro seleccionado:</h4>
+          <div class="flex items-center">
+            <div id="libro-imagen-container" class="w-16 h-24 bg-gray-300 mr-3 flex-shrink-0">
+              <!-- La imagen del libro se insertará aquí mediante JavaScript -->
+            </div>
+            <div>
+              <p id="libro-titulo" class="font-bold">Título del Libro</p>
+              <p id="libro-autor" class="text-sm text-gray-600">Autor</p>
+              <p id="libro-precio" class="text-yellow-600 font-medium">$0.00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos personales -->
+        <div>
+          <label for="nombre-completo" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+          <input
+            type="text"
+            id="nombre-completo"
+            placeholder="Tu nombre completo"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="email-reserva" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
+          <input
+            type="email"
+            id="email-reserva"
+            placeholder="tu@email.com"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+          <input
+            type="tel"
+            id="telefono"
+            placeholder="Tu número de contacto"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+        </div>
+
+        <div>
+          <label for="metodo-pago" class="block text-sm font-medium text-gray-700 mb-1">Método de pago</label>
+          <select
+            id="metodo-pago"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="">Selecciona un método de pago</option>
+            <option value="transferencia">Transferencia bancaria</option>
+            <option value="efectivo">Efectivo en tienda</option>
+            <option value="tarjeta">Tarjeta de crédito/débito</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="comentarios" class="block text-sm font-medium text-gray-700 mb-1">Comentarios adicionales (opcional)</label>
+          <textarea
+            id="comentarios"
+            rows="3"
+            placeholder="¿Alguna indicación especial?"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 bg-red-500 hover:bg-red-600 text-gray-800 font-medium rounded-md transition-colors"
+        >
+          Confirmar Reserva
+        </button>
+
+        <p class="text-xs text-gray-600 text-center mt-4">
+          Al confirmar la reserva, aceptas nuestros términos y condiciones para preventas.
+          El libro estará disponible en la fecha de lanzamiento indicada.
+        </p>
+      </form>
+    </div>
+
+    <!-- Lado derecho - Información de la reserva -->
+    <div class="hidden md:block md:w-1/2 bg-black/90 p-8 text-white">
+      <h2 class="text-2xl font-bold text-yellow-400 mb-6 text-center">RESERVA TU LIBRO</h2>
+
+      <div class="space-y-6 mb-8">
+        <div>
+          <h3 class="text-lg font-medium mb-2">¿Cómo funciona la reserva?</h3>
+          <p class="text-gray-300">
+            Reserva tu ejemplar con un depósito del 30% del valor y asegura tu copia para el día del lanzamiento.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-medium mb-2">Beneficios</h3>
+          <ul class="list-disc pl-5 text-gray-300 space-y-1">
+            <li>Garantiza tu ejemplar</li>
+            <li>Precio especial de preventa</li>
+            <li>Recibe notificaciones de lanzamiento</li>
+            <li>Posibilidad de ediciones firmadas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex justify-center items-center">
+        <img
+          src="/src/assets/img/login/pajarosfondo.png"
+          alt="Ilustración de libro"
+          class="max-w-full max-h-60 object-contain"
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Definición de tipos de TypeScript
+  interface LibroData {
+    titulo?: string;
+    autor?: string;
+    precio?: string;
+    imagen?: string;
+  }
+
+  // Definimos el evento personalizado con el tipo genérico correcto
+  interface ReservaModalEvent extends CustomEvent<LibroData | null> {
+    // CustomEvent ya tiene la propiedad 'detail' definida correctamente
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const reservaModal = document.getElementById('reserva-modal');
+    const closeReservaModal = document.getElementById('close-reserva-modal');
+    const reservaModalOverlay = document.getElementById('reserva-modal-overlay');
+
+    // Función para abrir el modal con animación
+    const abrirReservaModal = (libroData: LibroData | null = null) => {
+      if (!reservaModal) return;
+
+      // Si se pasa información del libro, actualizar los datos del formulario
+      if (libroData) {
+        const tituloElement = document.getElementById('libro-titulo');
+        if (tituloElement) {
+          tituloElement.textContent = libroData.titulo || 'Título del Libro';
+        }
+
+        const autorElement = document.getElementById('libro-autor');
+        if (autorElement) {
+          autorElement.textContent = libroData.autor || 'Autor';
+        }
+
+        const precioElement = document.getElementById('libro-precio');
+        if (precioElement) {
+          precioElement.textContent = libroData.precio || '$0.00';
+        }
+
+        // Actualizar la imagen si hay una disponible
+        const imagenContainer = document.getElementById('libro-imagen-container');
+        if (imagenContainer) {
+          imagenContainer.innerHTML = '';
+
+          if (libroData.imagen) {
+            const img = document.createElement('img');
+            img.src = libroData.imagen;
+            img.alt = libroData.titulo || 'Portada de libro';
+            img.className = 'w-full h-full object-cover';
+            imagenContainer.appendChild(img);
+          }
+        }
+      }
+
+      reservaModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      // Aplicar animación de entrada
+      setTimeout(() => {
+        const modalContent = reservaModal.querySelector('.transform');
+        if (modalContent) {
+          modalContent.classList.remove('scale-95', 'opacity-0');
+          modalContent.classList.add('scale-100', 'opacity-100');
+        }
+      }, 10);
+    };
+
+    // Función para cerrar el modal con animación
+    const cerrarReservaModal = () => {
+      if (!reservaModal) return;
+
+      const modalContent = reservaModal.querySelector('.transform');
+      if (modalContent) {
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+
+        // Esperar a que termine la animación antes de ocultar
+        setTimeout(() => {
+          reservaModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }, 300);
+      } else {
+        reservaModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    };
+
+    // Cerrar modal al hacer clic en el botón de cerrar
+    if (closeReservaModal) {
+      closeReservaModal.addEventListener('click', cerrarReservaModal);
+    }
+
+    // Cerrar modal al hacer clic en el overlay
+    if (reservaModalOverlay) {
+      reservaModalOverlay.addEventListener('click', (e) => {
+        if (e.target === reservaModalOverlay) {
+          cerrarReservaModal();
+        }
+      });
+    }
+
+    // Cerrar modal al presionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && reservaModal && !reservaModal.classList.contains('hidden')) {
+        cerrarReservaModal();
+      }
+    });
+
+    // Escuchar evento para abrir este modal desde otros componentes
+    document.addEventListener('abrir-reserva-modal', ((event: Event) => {
+      // Convertir y verificar el tipo del evento personalizado
+      const customEvent = event as CustomEvent<LibroData | null>;
+      // Si el evento contiene datos del libro, extraerlos
+      const libroData = customEvent.detail;
+      abrirReservaModal(libroData);
+    }) as EventListener);
+
+    // Manejar el envío del formulario de reserva
+    const formularioReserva = reservaModal?.querySelector('form');
+    if (formularioReserva) {
+      formularioReserva.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Aquí puedes agregar la lógica para procesar la reserva
+        // Por ejemplo, enviar los datos a un servidor o guardarlos localmente
+
+        // Simulación de envío exitoso
+        alert('¡Tu reserva ha sido registrada con éxito! Te contactaremos pronto.');
+        cerrarReservaModal();
+      });
+    }
+  });
+</script>

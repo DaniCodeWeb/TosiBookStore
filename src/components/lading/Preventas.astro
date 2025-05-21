@@ -1,4 +1,6 @@
 ---
+import ModalReservas from "./ModalReservas.astro";
+
 const preorderBooks = [
   {
     id: 1,
@@ -60,7 +62,7 @@ const preorderBooks = [
             <p class="text-gray-700 mb-6">
               Sé el primero en disfrutar de las novedades literarias más esperadas del año.
             </p>
-            <a href="/todas-preventas" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors">
+            <a href="/preventas/ListaPreventas" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors">
               Todas las Preventas
             </a>
           </div>
@@ -116,8 +118,12 @@ const preorderBooks = [
                     alt={book.title}
                     class="w-full h-64 object-cover transform transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 mb-4 rounded-md transition-colors">
+                  <div class="boton-reservar absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 mb-4 rounded-md transition-colors"
+                        data-titulo="El Gran Gatsby"
+  data-autor="F. Scott Fitzgerald"
+  data-precio="$350.00"
+  data-imagen="/ruta/imagen-libro.jpg">
                       Reservar ahora
                     </button>
                   </div>
@@ -196,8 +202,33 @@ const preorderBooks = [
               Ver todas las preventas
             </a>
           </div>
+          <ModalReservas />
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const botonesReservar = document.querySelectorAll('.boton-reservar');
+
+    botonesReservar.forEach(boton => {
+      boton.addEventListener('click', () => {
+        // Obtener datos del libro del botón
+        const libroData = {
+          titulo: boton.getAttribute('data-titulo'),
+          autor: boton.getAttribute('data-autor'),
+          precio: boton.getAttribute('data-precio'),
+          imagen: boton.getAttribute('data-imagen')
+        };
+
+        // Crear y disparar el evento con los datos
+        const abrirReservaEvent = new CustomEvent('abrir-reserva-modal', {
+          detail: libroData
+        });
+        document.dispatchEvent(abrirReservaEvent);
+      });
+    });
+  });
+</script>
