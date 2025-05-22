@@ -16,21 +16,35 @@
     "strictPropertyInitialization": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@assets/*": ["src/assets/*"],
-      "@lib/*": ["src/lib/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ]
     },
-    /* Language and Environment */
     "target": "es6",
-    "lib": ["es2018", "DOM"],
+    "lib": [
+      "es2018",
+      "DOM"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
   },
   "include": [
     "src/ts/**/*"
   ],
   "exclude": [
     "dist",
-    "node_modules",
+    "node_modules"
   ]
 }

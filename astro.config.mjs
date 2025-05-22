@@ -3,6 +3,8 @@ import mdx from '@astrojs/mdx';
 import tailwind from '@astrojs/tailwind';
 import path from 'path';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   // Configura tu URL del sitio - IMPORTANTE para SEO y URLs absolutas
@@ -20,10 +22,7 @@ export default defineConfig({
     }
   },
 
-  integrations: [
-    mdx(),
-    tailwind()
-  ],
+  integrations: [mdx(), tailwind(), react()],
 
   // Se elimina srcDir para usar la ruta estándar ./src
   cacheDir: './dist/pages',

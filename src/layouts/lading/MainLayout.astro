@@ -1,9 +1,6 @@
 ---
 import Navbar from '../../components/lading/Navbar.astro';
 import Footer from '../../components/lading/Footer.astro';
-import InicioSesion from '../../pages/auth/login/InicioSesion.astro';
-import RegistroUsuario from '../../pages/auth/registro/RegistroUsuario.astro';
-import RecuperarContrasena from '../../pages/auth/recuperarContraseña/RecuperarContraseña.astro';
 
 interface Props {
   title: string;
@@ -185,22 +182,6 @@ if (description.length > 160) {
   </main>
   <Footer />
 
-  <!-- Componentes de modal -->
-  <InicioSesion
-    data-aos="fade-down"
-    data-aos-duration="800"
-    data-aos-easing="ease-in-out-back"
-  />
-  <RegistroUsuario
-    data-aos="fade-down"
-    data-aos-duration="800"
-    data-aos-easing="ease-in-out-back"
-  />
-  <RecuperarContrasena
-    data-aos="fade-down"
-    data-aos-duration="800"
-    data-aos-easing="ease-in-out-back"
-  />
 
   {hasAOS && (
     <script>
