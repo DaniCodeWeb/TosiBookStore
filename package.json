@@ -93,7 +93,7 @@
     "tailwindcss": "^3.3.3",
     "terser": "^5.37.0",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
